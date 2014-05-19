@@ -30,6 +30,8 @@ public interface IConsistencyCallback {
 	 *   this consistency callback is guaranteed to be called eventually.
 	 *  <li> Changing the model is permitted during this callback, though it may lead to an inconsistent state again.
 	 * </ul> 
+	 * 
+	 * TODO: deliver a version/revision number, e.g. a monotonously increasing sequence ID of the consistency point?
 	 */
 	public void consistentNow(IChangeAwareMondixInstance mondixInstance);
 }
