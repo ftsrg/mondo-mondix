@@ -11,16 +11,20 @@
 
 package eu.mondo.mondix.live;
 
+import java.util.List;
+import java.util.Map;
+
 import eu.mondo.mondix.core.IMondixRelation;
 
 /**
  * Change-aware guarantees to the Mondix relation concept.
+ * <p> query instances are live queries.
  * @author Bergmann Gabor
  *
  */
-public interface IChangeAwareMondixRelation<Tuple> extends IMondixRelation<Tuple> {
+public interface IChangeAwareMondixRelation extends IMondixRelation {
 	@Override
-	public ILiveQueryInstance<Tuple> openQueryInstance();
+	public ILiveQueryInstance openQueryInstance();
 	@Override
-	public ILiveQueryInstance<Tuple> openSeededQueryInstance(Tuple seedTuple);
+	public ILiveQueryInstance openQueryInstance(List<String> selectedColumnNames, Map<String, Object> filter);
 }

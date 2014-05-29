@@ -12,16 +12,16 @@
 package eu.mondo.mondix.core;
 
 /**
- * Special case of {@link IQueryInstance} where the number of free (unseeded) parameters is known to be 0.
+ * Special case of {@link IQueryInstance} where the number of selected columns is known to be 0.
  * 
  * 
  * @author Bergmann Gabor
  *
  */
-public interface INullaryQueryInstance<Tuple> extends IQueryInstance<Tuple> {
+public interface INullaryQueryInstance extends IQueryInstance {
 	
 	/**
-	 * Core functionality: returns true iff the seed is an instance of the query.
+	 * Core functionality: returns true iff the filter matches the base relation.
 	 */
 	public boolean isTrue();
 

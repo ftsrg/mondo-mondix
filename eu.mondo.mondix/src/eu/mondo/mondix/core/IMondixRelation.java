@@ -12,6 +12,7 @@
 package eu.mondo.mondix.core;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a base relation for which queries can be opened.
@@ -20,11 +21,9 @@ import java.util.List;
  * @param Tuple the tuple type of this relation
  *
  */
-public interface IMondixRelation<Tuple> {
+public interface IMondixRelation {
 	
-	// TODO name, parameter names
-	
-	// TODO hint/prepare frequently seeded parameters
+	// TODO hint/prepare frequently filtered columns
 	
 	/**
 	 * Returns the indexer instance that owns and maintains this base relation.
@@ -32,22 +31,39 @@ public interface IMondixRelation<Tuple> {
 	public IMondixInstance getIndexerInstance();
 	
 	/**
-	 * Returns the number of parameters of this relation.
+	 * Returns the name of this relation that uniquely identifies it within the indexer instance.
+	 */
+	public String getName();
+	
+	/**
+	 * Returns an ordered list of column names.
+	 */
+	public List<String> getColumns();
+	
+	/**
+	 * Returns the number of parameters/columns of this relation.
+	 * <p> Equivalent to {@link #getColumns()}.size()
 	 */
 	public int getArity();
 	
 	/**
 	 * Returns a query instance against the entire contents of the relation.
 	 * <p> Result should be disposed if no longer used.
-	 * <p> Same as {@link #openSeededQueryInstance(List)} parameterized by an all-null tuple.
+	 * <p> Same as {@link #openQueryInstance(List, Map)} parameterized by (null, null).
 	 */
-	public IQueryInstance<Tuple> openQueryInstance();
+	public IQueryInstance openQueryInstance();
 	/**
-	 * Returns a query instance seeded by the given parameter tuple.
+	 * Returns a query instance filtered to the given values that only returns the selected columns.
 	 * <p> Result should be disposed if no longer used.
 	 * <p> Guaranteed to return {@link IUnaryQueryInstance} or {@link INullaryQueryInstance} 
-	 * 	if 1 respectively 0 free variables remain.
+	 * 	if 1 respectively 0 columns are selected.
+	 * 
+	 * @param selectedColumnNames the ordered, unique list of columns that should be returned for tuples in this relation (can be empty). 
+	 * 	If null is given, all columns are selected in the original order (see {@link #getColumns()}). 
+	 * @param filter a map from zero or more column names to concrete values. 
+	 *  The query will be filtered to those tuples only that take the given values at the given columns.
+	 *  If null is given, no filtering is done (equivalently to an empty map).
 	 */
-	public IQueryInstance<Tuple> openSeededQueryInstance(Tuple seedTuple);
+	public IQueryInstance openQueryInstance(List<String> selectedColumnNames, Map<String, Object> filter);
 
 }

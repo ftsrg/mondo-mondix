@@ -18,20 +18,20 @@ import eu.mondo.mondix.core.IQueryInstance;
  * @author Bergmann Gabor
  *
  */
-public interface ILiveQueryInstance<Tuple> extends IQueryInstance<Tuple> {
+public interface ILiveQueryInstance extends IQueryInstance {
 	// TODO Unary/Nullary specializations?
 	
 	@Override
-	public IChangeAwareMondixRelation<Tuple> getBaseRelation();
+	public IChangeAwareMondixRelation getBaseRelation();
 	/**
 	 * The given listener will be notified of changes from now on. 
 	 * The change listener will have to be removed before disposing the query instance.
 	 */
-	public void addChangeListener(IChangeCallback<Tuple> changeListener);
+	public void addChangeListener(IChangeCallback changeListener);
 	
 	/**
 	 * The given listener will no longer be notified of changes from now on.
 	 */
-	public void removeChangeListener(IChangeCallback<Tuple> changeListener);
+	public void removeChangeListener(IChangeCallback changeListener);
 
 }

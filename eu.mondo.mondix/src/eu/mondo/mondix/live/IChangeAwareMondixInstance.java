@@ -14,13 +14,13 @@ package eu.mondo.mondix.live;
 import eu.mondo.mondix.core.IMondixInstance;
 
 /**
- * A change-aware Mondix indexer instance guarantees that its published relations are {@link IChangeAwareMondixRelation}s, 
- * and that the indexer publishes information whether it is currently in a consistent state.
+ * Base relations published by a change-aware Mondix indexer instance may be {@link IChangeAwareMondixRelation}s. 
+ * The indexer additionally publishes information whether it is currently in a consistent state.
  * 
  * @author Bergmann Gabor
  *
  */
-public interface IChangeAwareMondixInstance extends IMondixInstance {
+public interface IChangeAwareMondixInstance extends IMondixInstance {	
 	/**
 	 * Returns true iff the entire mondix instance is in a consistent state.
 	 * 

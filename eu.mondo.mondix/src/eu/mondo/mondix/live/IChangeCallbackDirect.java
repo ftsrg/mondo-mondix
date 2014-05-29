@@ -11,14 +11,14 @@
 
 package eu.mondo.mondix.live;
 
-import java.util.List;
-
 
 /**
- * A callback interface for live query instances to deliver information about their changes.
+ * A callback interface for an {@link ILiveQueryInstanceDirect} to deliver information about query result changes.
+ * Similar to {@link IChangeCallback}, but allows a direct access to the indexer's internal tuple representation.
+ * 
  * @author Bergmann Gabor
  */
-public interface IChangeCallback {
+public interface IChangeCallbackDirect<Row> {
 	/**
 	 * Called upon each elementary change to the live query's results.
 	 * @param inserted true if tuple was inserted, false if it was removed
@@ -26,6 +26,6 @@ public interface IChangeCallback {
 	 * <p> WARNING: model MUST NOT be accessed within the callback. 
 	 * <p> WARNING: consistency of query results not guaranteed at callback time. 
 	 */
-	public void changed(ILiveQueryInstance query, boolean inserted, List<?> changedTuple);
+	public void changed(ILiveQueryInstanceDirect<Row> query, boolean inserted, Row changedTuple);
 
 }

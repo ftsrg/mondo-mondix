@@ -13,16 +13,16 @@ package eu.mondo.mondix.core;
 
 
 /**
- * Special case of {@link IQueryInstance} where the number of free (unseeded) parameters is known to be 1.
+ * Special case of {@link IQueryInstance} where the number of selected columns is known to be 1.
  * 
  * 
  * @author Bergmann Gabor
  *
  */
-public interface IUnaryQueryInstance<Tuple> extends IQueryInstance<Tuple> {
+public interface IUnaryQueryInstance extends IQueryInstance {
 	
 	/**
-	 * Core functionality: returns all values of the free parameter of this (seeded) query instance.
+	 * Core functionality: returns all values of the single selected column of this (filtered) query instance.
 	 */
 	public Iterable<? extends Object> getValues();
 
