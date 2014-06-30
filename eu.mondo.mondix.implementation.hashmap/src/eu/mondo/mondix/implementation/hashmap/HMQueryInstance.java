@@ -68,12 +68,12 @@ public class HMQueryInstance implements IQueryInstance<List<Object>> {
 
 	@Override
 	public Iterable<? extends List<Object>> getAllTuples() {
-		return tupleSet;
+		return new ArrayList<List<Object>>(tupleSet);
 	}
 
 	@Override
 	public Iterable<? extends List<Object>> getAllValuesOfFreeParameters() {
-		return tupleSetFreeParameters;
+		return new ArrayList<List<Object>>(tupleSetFreeParameters);
 	}
 	
 	/**
