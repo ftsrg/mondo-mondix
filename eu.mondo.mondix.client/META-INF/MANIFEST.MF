@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Client
-Bundle-SymbolicName: eu.mondo.mondix.client
-Bundle-Version: 1.0.0.qualifier
-Export-Package: eu.mondo.mondix.client
-Require-Bundle: eu.mondo.mondix,
- eu.mondo.mondix.implementation.hashmap;bundle-version="1.0.0"
