@@ -63,7 +63,8 @@ public interface IQueryInstance {
 	
 	/**
 	 * Core functionality: returns all tuples formed by selected columns of the base relation that are in the result set of this (filtered) query instance.
-	 * <p> Each tuple will be returned as a list of values, one for each selected columns (see {@link #getSelectedColumnNames()}). 
+	 * <p> Each tuple will be returned as a list of values, one for each selected columns (see {@link #getSelectedColumnNames()}).
+	 * <p> Returned tuples must be distinct.
 	 * <p> Invoking this method may involve copying the indexer contents into such a list-based row format. 
 	 * This copying is necessary for cross-network transfer anyway; more efficient solutions may be available for local clients if the {@link IQueryInstanceDirect} interface extension is provided.
 	 */
