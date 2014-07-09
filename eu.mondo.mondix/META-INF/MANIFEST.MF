@@ -4,3 +4,5 @@ Bundle-Name: Mondix
 Bundle-SymbolicName: eu.mondo.mondix
 Bundle-Version: 0.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: eu.mondo.mondix.core,
+ eu.mondo.mondix.live
