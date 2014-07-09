@@ -1,8 +1,6 @@
 package eu.mondo.mondix.implementation.hashmap.util;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Util {
 
@@ -24,11 +22,4 @@ public class Util {
 		}
 	}
 	
-	public static Map<String, Object> createNullFilter(List<String> columnNames) {
-		HashMap<String, Object> nullFilter = new HashMap<String, Object>();
-		for(String columnName : columnNames) {
-			nullFilter.put(columnName, null);
-		}
-		return nullFilter;
-	}
 }

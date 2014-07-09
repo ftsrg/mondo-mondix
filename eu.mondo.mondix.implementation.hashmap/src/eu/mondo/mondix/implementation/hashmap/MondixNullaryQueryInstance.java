@@ -1,6 +1,6 @@
 package eu.mondo.mondix.implementation.hashmap;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +25,7 @@ public class MondixNullaryQueryInstance<Row extends AbstractRow> extends
 		return isTrue(tuples);
 	}
 
-	public static boolean isTrue(ArrayList<List<Object>> tuples) {
+	public static boolean isTrue(HashSet<List<Object>> tuples) {
 		return tuples.size() > 0;
 	}
 

@@ -19,12 +19,11 @@ import eu.mondo.mondix.core.IMondixRelation;
 import eu.mondo.mondix.core.INullaryQueryInstance;
 import eu.mondo.mondix.core.IQueryInstance;
 import eu.mondo.mondix.core.IUnaryQueryInstance;
-import eu.mondo.mondix.implementation.hashmap.AbstractRow;
 import eu.mondo.mondix.implementation.hashmap.ImmutableMapRow;
 import eu.mondo.mondix.implementation.hashmap.database.Database;
 import eu.mondo.mondix.implementation.hashmap.live.ChangeAwareMondixInstance;
-import eu.mondo.mondix.implementation.hashmap.live.ChangeAwareMondixRelation;
-import eu.mondo.mondix.implementation.hashmap.live.LiveQueryInstance;
+import eu.mondo.mondix.live.IChangeAwareMondixRelation;
+import eu.mondo.mondix.live.ILiveQueryInstance;
 
 public class MondixTest {
 	
@@ -211,8 +210,8 @@ public class MondixTest {
 		db.addRelation("age", ages);
 		
 		ChangeAwareMondixInstance<ImmutableMapRow> changeAwareMondixInstance = db.getChangeAwareMondixInstance();
-		ChangeAwareMondixRelation<? extends AbstractRow> liveAgeRelation = changeAwareMondixInstance.getBaseRelationByName("age");
-		LiveQueryInstance<? extends AbstractRow> liveQueryInstance = liveAgeRelation.openQueryInstance();
+		IChangeAwareMondixRelation liveAgeRelation = changeAwareMondixInstance.getBaseRelationByName("age");
+		ILiveQueryInstance liveQueryInstance = liveAgeRelation.openQueryInstance();
 		
 		int coutOfTuples = liveQueryInstance.getCountOfTuples();
 		System.out.println(coutOfTuples);
@@ -244,7 +243,7 @@ public class MondixTest {
 		HashMap<String, Object> filter = new HashMap<String, Object>();
 		filter.put("name", null);
 		filter.put("year", 26);
-		LiveQueryInstance<? extends AbstractRow> liveQueryInstanceFiltered = liveAgeRelation.openQueryInstance(selectedColumnNames, filter);
+		ILiveQueryInstance liveQueryInstanceFiltered = liveAgeRelation.openQueryInstance(selectedColumnNames, filter);
 		StringBuilder sbFiltered = new StringBuilder();
 		for(List<?> tuple : liveQueryInstanceFiltered.getAllTuples()) {
 			sbFiltered.append(tupleToString(tuple));
@@ -297,7 +296,7 @@ public class MondixTest {
 		MyChangeCallback changeCallback = new MyChangeCallback();
 		liveQueryInstance.addChangeListener(changeCallback);
 		MyConsistencyCallback consistencyCallback = new MyConsistencyCallback();
-		changeAwareMondixInstance.addChangeListener(consistencyCallback);
+		changeAwareMondixInstance.addConsistencyListener(consistencyCallback);
 		ImmutableMapRow age7 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
 			    .put("name", "Jake").put("year", 29).build());
 		changeAwareMondixInstance.addRow("age", age7);

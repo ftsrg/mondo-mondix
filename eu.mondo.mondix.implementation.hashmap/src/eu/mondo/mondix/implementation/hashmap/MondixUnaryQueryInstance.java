@@ -1,6 +1,5 @@
 package eu.mondo.mondix.implementation.hashmap;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class MondixUnaryQueryInstance<Row extends AbstractRow> extends
 		return getValues(tuples);
 	}
 	
-	public static Iterable<? extends Object> getValues(ArrayList<List<Object>> tuples) {
+	public static Iterable<? extends Object> getValues(HashSet<List<Object>> tuples) {
 		HashSet<Object> values = new HashSet<Object>();
 		for(List<Object> tuple : tuples) {
 			Object value = tuple.get(0);

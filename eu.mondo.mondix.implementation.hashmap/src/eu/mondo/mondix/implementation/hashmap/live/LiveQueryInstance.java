@@ -47,7 +47,7 @@ public class LiveQueryInstance<Row extends AbstractRow> extends MondixQueryInsta
 	}
 
 	public void addRow(Row row) {
-		if (isMatching(row, filter)) {
+		if (isMatch(row, filter)) {
 			ArrayList<Object> tuple = createTuple(selectedColumnNames, row);
 			tuples.add(tuple);
 			notifyConsistencyCallbacks(true, tuple);
@@ -55,7 +55,7 @@ public class LiveQueryInstance<Row extends AbstractRow> extends MondixQueryInsta
 	}
 
 	public void removeRow(Row row) {
-		if (isMatching(row, filter)) {
+		if (isMatch(row, filter)) {
 			ArrayList<Object> tuple = createTuple(selectedColumnNames, row);
 			tuples.remove(tuple);
 			notifyConsistencyCallbacks(false, tuple);

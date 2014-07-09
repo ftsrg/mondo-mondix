@@ -29,12 +29,12 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 	}
 
 	@Override
-	public void addChangeListener(IConsistencyCallback consistencyListener) {
+	public void addConsistencyListener(IConsistencyCallback consistencyListener) {
 		consistencyListeners.add(consistencyListener);
 	}
 
 	@Override
-	public void removeChangeListener(IConsistencyCallback consistencyListener) {
+	public void removeConsistencyListener(IConsistencyCallback consistencyListener) {
 		consistencyListeners.remove(consistencyListener);
 	}
 
