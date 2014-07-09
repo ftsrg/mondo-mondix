@@ -38,11 +38,11 @@ public interface IChangeAwareMondixInstance extends IMondixInstance {
 	 * The given listener will be notified of consistency points from now on. 
 	 * <p> See {@link IConsistencyCallback} for guarantees. 
 	 */
-	public void addChangeListener(IConsistencyCallback consistencyListener);
+	public void addConsistencyListener(IConsistencyCallback consistencyListener);
 	
 	/**
 	 * The given listener will no longer be notified of consistency points from now on.
 	 */
-	public void removeChangeListener(IConsistencyCallback consistencyListener);
+	public void removeConsistencyListener(IConsistencyCallback consistencyListener);
 
 }
