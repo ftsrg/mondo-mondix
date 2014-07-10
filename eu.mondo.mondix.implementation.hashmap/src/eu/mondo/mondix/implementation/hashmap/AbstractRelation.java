@@ -5,9 +5,26 @@ import java.util.List;
 import eu.mondo.mondix.core.IMondixInstance;
 import eu.mondo.mondix.core.IMondixRelation;
 
-public abstract class AbstractRelation<Row> implements IMondixRelation {
+/**
+ * 
+ * Abstract Mondix relation implementation, without prescribing the data structure of the relations.
+ *
+ */
+public abstract class AbstractRelation implements IMondixRelation {
+	
+	/**
+	 * Reference to the base indexer.
+	 */
 	protected IMondixInstance mondixInstance;
+	
+	/**
+	 * Name of the relation.
+	 */
 	protected String name;
+	
+	/**
+	 * Attribute names in an ordered list. 
+	 */
 	protected List<String> columns;
 
 	public AbstractRelation(IMondixInstance mondixInstance, String name, List<String> columns) {

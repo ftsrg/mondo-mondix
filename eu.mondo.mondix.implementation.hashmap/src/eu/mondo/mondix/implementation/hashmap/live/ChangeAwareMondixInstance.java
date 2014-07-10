@@ -44,7 +44,9 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 			return catalogRelation;
 		else {
 			Set<Row> relation = relations.get(relationName);
-			List<String> columns = relation.iterator().next().getColumns();
+			List<String> columns = null;
+			if (relation.iterator().hasNext())
+				columns = relation.iterator().next().getColumns();
 			ChangeAwareMondixRelation<Row> changeAwareMondixRelation = new ChangeAwareMondixRelation<Row>(this, relationName, columns, relation);
 			changeAwareMondixRelations.add(changeAwareMondixRelation);
 			return changeAwareMondixRelation;
@@ -73,9 +75,10 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 	}
 
 	public void removeRow(String relationName, Row row) {
-		relations.get(relationName).remove(row);
+		Set<Row> relation = relations.get(relationName);
+		relation.remove(row);
 		for(ChangeAwareMondixRelation<Row> changeAwareMondixRelation : changeAwareMondixRelations) {
-			changeAwareMondixRelation.removeRow(row);;
+			changeAwareMondixRelation.removeRow(row);
 		}
 		notifyConsistencyListeners();
 	}

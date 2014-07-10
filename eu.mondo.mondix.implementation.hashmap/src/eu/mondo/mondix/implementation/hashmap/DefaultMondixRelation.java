@@ -8,10 +8,26 @@ import java.util.Set;
 import eu.mondo.mondix.core.IMondixInstance;
 import eu.mondo.mondix.core.IQueryInstance;
 
-public class DefaultMondixRelation<Row extends AbstractRow> extends AbstractRelation<Row> {
+/**
+ * 
+ * Default Mondix relation implementation representing a relation as a Set of Rows.
+ *
+ * @param <Row> type of a Row in a relation.
+ */
+public class DefaultMondixRelation<Row extends AbstractRow> extends AbstractRelation {
 	
+	/**
+	 * Rows representing a relation as a Set of Rows.
+	 */
 	protected Set<Row> rows;
 	
+	/**
+	 * 
+	 * @param mondixInstance parent instance
+	 * @param name name of the relation
+	 * @param columns ordered list of attributes in the relation
+	 * @param data the actual relation as a Set of Rows
+	 */
 	public DefaultMondixRelation(IMondixInstance mondixInstance, String name, List<String> columns, Set<Row> data) {
 		super(mondixInstance, name, columns);
 		rows = new HashSet<Row>(data);

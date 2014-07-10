@@ -19,9 +19,8 @@ import eu.mondo.mondix.core.IMondixRelation;
 import eu.mondo.mondix.core.INullaryQueryInstance;
 import eu.mondo.mondix.core.IQueryInstance;
 import eu.mondo.mondix.core.IUnaryQueryInstance;
-import eu.mondo.mondix.implementation.hashmap.ImmutableMapRow;
 import eu.mondo.mondix.implementation.hashmap.database.Database;
-import eu.mondo.mondix.implementation.hashmap.live.ChangeAwareMondixInstance;
+import eu.mondo.mondix.live.IChangeAwareMondixInstance;
 import eu.mondo.mondix.live.IChangeAwareMondixRelation;
 import eu.mondo.mondix.live.ILiveQueryInstance;
 
@@ -37,15 +36,15 @@ public class MondixTest {
 		db = new Database();
 		
 		// create new relations
-		HashSet<ImmutableMapRow> ages = new HashSet<ImmutableMapRow>();
-		ImmutableMapRow age1 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "John").put("year", 26).build());
+		HashSet<ImmutableMap<String, Object>> ages = new HashSet<ImmutableMap<String, Object>>();
+		ImmutableMap<String, Object> age1 = ImmutableMap.<String, Object>builder()
+			    .put("name", "John").put("year", 26).build();
 		ages.add(age1);
-		ImmutableMapRow age2 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Jill").put("year", 23).build());
+		ImmutableMap<String, Object> age2 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Jill").put("year", 23).build();
 		ages.add(age2);
-		ImmutableMapRow age3 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Jack").put("year", 26).build());
+		ImmutableMap<String, Object> age3 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Jack").put("year", 26).build();
 		ages.add(age3);
 		db.addRelation("age", ages);
 		
@@ -64,7 +63,7 @@ public class MondixTest {
 		System.out.println(sb.toString());
 		assertEquals("\nage\n", sb.toString());
 	}
-
+	
 	@Test
 	public void testCatalogRelation() {
 		ageRelation = mondixInstance.getCatalogRelation();
@@ -86,7 +85,7 @@ public class MondixTest {
 		assertTrue(sb.toString().contains("\n  \n"));
 		assertTrue(sb.toString().contains("\n  age\n"));
 	}
-
+	
 	@Test
 	public void testAgeRelation() {
 		ageRelation = mondixInstance.getBaseRelationByName("age");
@@ -141,22 +140,21 @@ public class MondixTest {
 		return sb.toString();
 	}
 	
-
 	@Test
 	public void testUnary() throws Exception {
 		// create new database
 		Database bikeDB = new Database();
 		
 		// create new relations
-		HashSet<ImmutableMapRow> bikes = new HashSet<ImmutableMapRow>();
-		ImmutableMapRow bike1 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Scott").build());
+		HashSet<ImmutableMap<String, Object>> bikes = new HashSet<ImmutableMap<String, Object>>();
+		ImmutableMap<String, Object> bike1 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Scott").build();
 		bikes.add(bike1);
-		ImmutableMapRow bike2 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Specialized").build());
+		ImmutableMap<String, Object> bike2 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Specialized").build();
 		bikes.add(bike2);
-		ImmutableMapRow bike3 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Gepida").build());
+		ImmutableMap<String, Object> bike3 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Gepida").build();
 		bikes.add(bike3);
 		bikeDB.addRelation("bike", bikes);
 		
@@ -171,15 +169,15 @@ public class MondixTest {
 		System.out.println(sb);
 		assertEquals("Gepida\nScott\nSpecialized\n", sb.toString());
     }
-
+	
 	@Test
 	public void testNullary() throws Exception {
 		// create new database
 		Database unaryDB = new Database();
 		
 		// create new relations
-		HashSet<ImmutableMapRow> unaryTuples = new HashSet<ImmutableMapRow>();
-		ImmutableMapRow emptyTuple = new ImmutableMapRow(ImmutableMap.<String, Object>builder().build());
+		HashSet<ImmutableMap<String, Object>> unaryTuples = new HashSet<ImmutableMap<String, Object>>();
+		ImmutableMap<String, Object> emptyTuple = ImmutableMap.<String, Object>builder().build();
 		unaryTuples.add(emptyTuple);
 		unaryDB.addRelation("exists", unaryTuples);
 		
@@ -190,27 +188,27 @@ public class MondixTest {
 		System.out.println(nullaryExistsQueryInstance.isTrue());
 		assertTrue(nullaryExistsQueryInstance.isTrue());
     }
-
+	
 	@Test
 	public void live() throws Exception {
 		// create new database
 		db = new Database();
 		
 		// create new relations
-		HashSet<ImmutableMapRow> ages = new HashSet<ImmutableMapRow>();
-		ImmutableMapRow age1 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "John").put("year", 26).build());
+		HashSet<ImmutableMap<String, Object>> ages = new HashSet<ImmutableMap<String, Object>>();
+		ImmutableMap<String, Object> age1 = ImmutableMap.<String, Object>builder()
+			    .put("name", "John").put("year", 26).build();
 		ages.add(age1);
-		ImmutableMapRow age2 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Jill").put("year", 23).build());
+		ImmutableMap<String, Object> age2 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Jill").put("year", 23).build();
 		ages.add(age2);
-		ImmutableMapRow age3 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Jack").put("year", 26).build());
+		ImmutableMap<String, Object> age3 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Jack").put("year", 26).build();
 		ages.add(age3);
 		db.addRelation("age", ages);
 		
-		ChangeAwareMondixInstance<ImmutableMapRow> changeAwareMondixInstance = db.getChangeAwareMondixInstance();
-		IChangeAwareMondixRelation liveAgeRelation = changeAwareMondixInstance.getBaseRelationByName("age");
+		IChangeAwareMondixInstance changeAwareMondixInstance = db.getChangeAwareMondixInstance();
+		IChangeAwareMondixRelation liveAgeRelation = (IChangeAwareMondixRelation) changeAwareMondixInstance.getBaseRelationByName("age");
 		ILiveQueryInstance liveQueryInstance = liveAgeRelation.openQueryInstance();
 		
 		int coutOfTuples = liveQueryInstance.getCountOfTuples();
@@ -228,9 +226,9 @@ public class MondixTest {
 		assertTrue(sb.toString().contains("\n  Jack\n  26\n"));
 		
 		// test live data is added
-		ImmutableMapRow age4 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Jenny").put("year", 26).build());
-		changeAwareMondixInstance.addRow("age", age4);
+		ImmutableMap<String, Object> age4 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Jenny").put("year", 26).build();
+		db.addRow("age", age4);
 		
 		int coutOfTuples2 = liveQueryInstance.getCountOfTuples();
 		System.out.println(coutOfTuples2);
@@ -255,9 +253,9 @@ public class MondixTest {
 		assertTrue(sbFiltered.toString().contains("\n  Jack\n  26\n"));
 		
 		// add matching, must show up as result
-		ImmutableMapRow age5 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Johanna").put("year", 26).build());
-		changeAwareMondixInstance.addRow("age", age5);
+		ImmutableMap<String, Object> age5 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Johanna").put("year", 26).build();
+		db.addRow("age", age5);
 		StringBuilder sbFiltered2 = new StringBuilder();
 		for(List<?> tuple : liveQueryInstanceFiltered.getAllTuples()) {
 			sbFiltered2.append(tupleToString(tuple));
@@ -268,9 +266,9 @@ public class MondixTest {
 		assertTrue(sbFiltered2.toString().contains("\n  Johanna\n  26\n"));
 
 		// add filtered, does not show up as result
-		ImmutableMapRow age6 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Joe").put("year", 35).build());
-		changeAwareMondixInstance.addRow("age", age6);
+		ImmutableMap<String, Object> age6 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Joe").put("year", 35).build();
+		db.addRow("age", age6);
 		StringBuilder sbFiltered3 = new StringBuilder();
 		for(List<?> tuple : liveQueryInstanceFiltered.getAllTuples()) {
 			sbFiltered3.append(tupleToString(tuple));
@@ -297,10 +295,10 @@ public class MondixTest {
 		liveQueryInstance.addChangeListener(changeCallback);
 		MyConsistencyCallback consistencyCallback = new MyConsistencyCallback();
 		changeAwareMondixInstance.addConsistencyListener(consistencyCallback);
-		ImmutableMapRow age7 = new ImmutableMapRow(ImmutableMap.<String, Object>builder()
-			    .put("name", "Jake").put("year", 29).build());
-		changeAwareMondixInstance.addRow("age", age7);
-		changeAwareMondixInstance.removeRow("age", age5);
+		ImmutableMap<String, Object> age7 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Jake").put("year", 29).build();
+		db.addRow("age", age7);
+		db.removeRow("age", age5);
 		System.out.println(changeCallback.getNotificationsStr());
 		assertTrue(changeCallback.getNotificationsStr().toString().contains("inserted: true; tuple: [Jake, 29]"));
 		assertTrue(changeCallback.getNotificationsStr().toString().contains("inserted: false; tuple: [Johanna, 26]"));
@@ -317,7 +315,6 @@ public class MondixTest {
 		assertFalse(sbFiltered4.toString().contains("\n  Jill\n  23\n"));
 		assertTrue(sbFiltered4.toString().contains("\n  Jenny\n  26\n"));
 		assertFalse(sbFiltered4.toString().contains("\n  Johanna\n  26\n"));
-		
     }
 	
 }
