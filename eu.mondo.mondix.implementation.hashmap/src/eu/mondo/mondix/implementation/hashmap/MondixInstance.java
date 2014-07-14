@@ -1,6 +1,7 @@
 package eu.mondo.mondix.implementation.hashmap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +33,26 @@ public class MondixInstance<Row extends AbstractRow> implements IMondixInstance 
 	protected Map<String, Set<Row>> relations;
 	
 	/**
+	 * Ordered list of attributes for each relation.
+	 */
+	protected Map<String, List<String>> relationColumnNames;
+	
+	/**
+	 * Instantiated relations for lazy-evaluation.
+	 */
+	protected Map<String, IMondixRelation> instantiatedRelations;
+	
+	/**
 	 * Initialize Mondix instance with relations and fill up catalog with the name of relations.
 	 * @param relations Initial input data.
+	 * @param relationColumnNames 
 	 * @throws Exception An Exception is thrown, when the input relation contains "" as relation name, as it is reserved for the catalog.
 	 */
-	public MondixInstance(Map<String, Set<Row>>  relations) throws Exception {
-		// save relations and set this as base indexer
+	public MondixInstance(Map<String, Set<Row>>  relations, Map<String, List<String>> relationColumnNames) throws Exception {
+		// save relations and column names
 		this.relations = relations;
+		this.relationColumnNames = relationColumnNames;
+		this.instantiatedRelations = new HashMap<String, IMondixRelation>();
 		
 		// check for reserved empty string used for catalog
 		if (relations.containsKey("")) {
@@ -62,15 +76,22 @@ public class MondixInstance<Row extends AbstractRow> implements IMondixInstance 
 	
 	@Override
 	public IMondixRelation getBaseRelationByName(String relationName) {
+		IMondixRelation mondixRelation;
 		if ("".equals(relationName))
-			return catalogRelation;
+			// return catalog relation
+			mondixRelation = catalogRelation;
 		else {
-			Set<Row> relation = relations.get(relationName);
-			List<String> columns = null;
-			if (relation.iterator().hasNext())
-				columns = relation.iterator().next().getColumns();
-			return new DefaultMondixRelation<Row>(this, relationName, columns, relation);
+			// lazy instantiate relation
+			if (instantiatedRelations.get(relationName) != null) {
+				mondixRelation = instantiatedRelations.get(relationName);
+			} else {
+				Set<Row> relation = relations.get(relationName);
+				List<String> columns = relationColumnNames.get(relationName);
+				mondixRelation = new DefaultMondixRelation<Row>(this, relationName, columns, relation);
+				instantiatedRelations.put(relationName, mondixRelation);
+			}
 		}
+		return mondixRelation;
 	}
 	
 	@Override

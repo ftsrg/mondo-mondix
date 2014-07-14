@@ -35,9 +35,9 @@ public class ChangeAwareMondixRelation<Row extends AbstractRow> extends DefaultM
 	@Override
 	public LiveQueryInstance<Row> openQueryInstance(List<String> selectedColumnNames, Map<String, Object> filter) {
 		LiveQueryInstance<Row> liveQueryInstance;
-		if (getArity() == 1)
+		if (selectedColumnNames.size() == 1)
 			liveQueryInstance = new LiveUnaryQueryInstance<Row>(this, rows, selectedColumnNames, filter);
-		else if (getArity() == 0)
+		else if (selectedColumnNames.size() == 0)
 			liveQueryInstance = new LiveNullaryQueryInstance<Row>(this, rows, selectedColumnNames, filter);
 		else 
 			liveQueryInstance = new LiveQueryInstance<Row>(this, rows, selectedColumnNames, filter);

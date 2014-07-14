@@ -1,9 +1,12 @@
 package eu.mondo.mondix.implementation.hashmap.live;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableMap;
 
 import eu.mondo.mondix.implementation.hashmap.AbstractRow;
 import eu.mondo.mondix.implementation.hashmap.ImmutableMapRow;
@@ -15,12 +18,12 @@ import eu.mondo.mondix.live.IConsistencyCallback;
 public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixInstance<Row> implements IChangeAwareMondixInstance {
 
 	protected HashSet<IConsistencyCallback> consistencyListeners;
-	private Set<ChangeAwareMondixRelation<Row>> changeAwareMondixRelations;
+	private Map<String, ChangeAwareMondixRelation<Row>> changeAwareMondixRelations;
 
-	public ChangeAwareMondixInstance(Map<String, Set<Row>> mxRelations) throws Exception {
-		super(mxRelations);
+	public ChangeAwareMondixInstance(Map<String, Set<Row>> mxRelations, Map<String, List<String>> relationColumnNames) throws Exception {
+		super(mxRelations, relationColumnNames);
 		this.consistencyListeners = new HashSet<IConsistencyCallback>();
-		this.changeAwareMondixRelations = new HashSet<ChangeAwareMondixRelation<Row>>();
+		this.changeAwareMondixRelations = new HashMap<String, ChangeAwareMondixRelation<Row>>();
 	}
 
 	@Override
@@ -43,12 +46,15 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 		if ("".equals(relationName))
 			return catalogRelation;
 		else {
-			Set<Row> relation = relations.get(relationName);
-			List<String> columns = null;
-			if (relation.iterator().hasNext())
-				columns = relation.iterator().next().getColumns();
-			ChangeAwareMondixRelation<Row> changeAwareMondixRelation = new ChangeAwareMondixRelation<Row>(this, relationName, columns, relation);
-			changeAwareMondixRelations.add(changeAwareMondixRelation);
+			ChangeAwareMondixRelation<Row> changeAwareMondixRelation;
+			if (changeAwareMondixRelations.get(relationName) != null) {
+				changeAwareMondixRelation = changeAwareMondixRelations.get(relationName);
+			} else {
+				Set<Row> relation = relations.get(relationName);
+				List<String> columns = relationColumnNames.get(relationName);
+				changeAwareMondixRelation = new ChangeAwareMondixRelation<Row>(this, relationName, columns, relation);
+				changeAwareMondixRelations.put(relationName, changeAwareMondixRelation);
+			}
 			return changeAwareMondixRelation;
 		}
 	}
@@ -58,28 +64,37 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 		return getBaseRelationByName("");
 	}
 	
-	public void addRelation(String name, HashSet<ImmutableMapRow> ages) {
-		throw new UnsupportedOperationException("live catalogs currently not supported");
+	public void addRelation(String relationName, HashSet<Row> relation, List<String> columns) {
+		relations.put(relationName, relation);
+		relationColumnNames.put(relationName, columns);
+		
+		ImmutableMapRow row = new ImmutableMapRow(ImmutableMap.<String, String>builder().put("name", relationName).build());
+		catalogRelation.addRow(row);
 	}
 	
-	public void removeRelation(String name) {
-		throw new UnsupportedOperationException("live catalogs currently not supported");
+	public void removeRelation(String relationName) {
+		relations.remove(relationName);
+		relationColumnNames.remove(relationName);
+		
+		ImmutableMapRow row = new ImmutableMapRow(ImmutableMap.<String, String>builder().put("name", relationName).build());
+		catalogRelation.removeRow(row);
 	}
 	
 	public void addRow(String relationName, Row row) {
-		relations.get(relationName).add(row);
-		for(ChangeAwareMondixRelation<Row> changeAwareMondixRelation : changeAwareMondixRelations) {
-			changeAwareMondixRelation.addRow(row);
-		}
+		Set<Row> relation = relations.get(relationName);
+		relation.add(row);
+		
+		changeAwareMondixRelations.get(relationName).addRow(row);
+		
 		notifyConsistencyListeners();
 	}
 
 	public void removeRow(String relationName, Row row) {
 		Set<Row> relation = relations.get(relationName);
 		relation.remove(row);
-		for(ChangeAwareMondixRelation<Row> changeAwareMondixRelation : changeAwareMondixRelations) {
-			changeAwareMondixRelation.removeRow(row);
-		}
+		
+		changeAwareMondixRelations.get(relationName).removeRow(row);
+		
 		notifyConsistencyListeners();
 	}
 		

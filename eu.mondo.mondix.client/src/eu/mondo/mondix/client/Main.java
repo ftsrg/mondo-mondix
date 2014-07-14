@@ -12,6 +12,7 @@ public class Main {
 		test.testUnary();
 		test.testNullary();
 		test.live();
+		test.addRelation();
 	}
 	
 }

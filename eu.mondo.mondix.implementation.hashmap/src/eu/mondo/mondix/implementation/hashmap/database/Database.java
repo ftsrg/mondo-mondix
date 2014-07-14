@@ -1,7 +1,9 @@
 package eu.mondo.mondix.implementation.hashmap.database;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +25,11 @@ public class Database {
 	protected Map<String, Set<ImmutableMap<String, Object>>> databaseRelations;
 	
 	/**
+	 * Ordered list of column names for each relation.
+	 */
+	protected Map<String, List<String>> relationColumnNames;
+	
+	/**
 	 * Relations, required by the generic Mondix implementation.
 	 */
 	protected Map<String, Set<ImmutableMapRow>> mondixRelations;
@@ -38,6 +45,7 @@ public class Database {
 	 */
 	public Database() {
 		databaseRelations = new HashMap<String, Set<ImmutableMap<String, Object>>>();
+		relationColumnNames = new HashMap<String, List<String>>();
 		mondixRelations = new HashMap<String, Set<ImmutableMapRow>>();
 		changeAwareMondixInstance = null;
 	}
@@ -45,19 +53,32 @@ public class Database {
 	/**
 	 * Add a relation to the database.
 	 * @param name identifies the relation
+	 * @param columns ordered attribute name list of the relation.
+	 * Can be null, in that case columns are determined from a row of a relation.
+	 * @throws Exception Exception is thrown when an empty relation is given without column specification.
 	 */
-	public void addRelation(String name, HashSet<ImmutableMap<String, Object>> ages) {
+	public void addRelation(String name, HashSet<ImmutableMap<String, Object>> relation, List<String> columns) throws Exception {
 		// Handle database operations.
-		databaseRelations.put(name, ages);
+		databaseRelations.put(name, relation);
+		
+		if (columns != null) {
+			relationColumnNames.put(name, columns);
+		} else {
+			if (relation.iterator().hasNext()) {
+				relationColumnNames.put(name, new ArrayList<String>(relation.iterator().next().keySet()));
+			} else {
+				throw new Exception("MondixError: Please specify attribute names!");
+			}
+		}
 		
 		// Synchronize Mondix data structures.
-		HashSet<ImmutableMapRow> agesMondix = new HashSet<ImmutableMapRow>();
-		for(ImmutableMap<String, Object> age : ages) {
-			agesMondix.add(new ImmutableMapRow(age));
+		HashSet<ImmutableMapRow> mondixRelation = new HashSet<ImmutableMapRow>();
+		for(ImmutableMap<String, Object> row : relation) {
+			mondixRelation.add(new ImmutableMapRow(row));
 		}
-		mondixRelations.put(name, agesMondix);
+		mondixRelations.put(name, mondixRelation);
 		if (changeAwareMondixInstance != null)
-			changeAwareMondixInstance.addRelation(name, agesMondix);
+			changeAwareMondixInstance.addRelation(name, mondixRelation, columns);
 	}
 	
 	/**
@@ -67,6 +88,7 @@ public class Database {
 	public void removeRelation(String name) {
 		// Handle database operations.
 		databaseRelations.remove(name);
+		relationColumnNames.remove(name);
 		
 		// Synchronize Mondix data structures.
 		mondixRelations.remove(name);
@@ -130,7 +152,7 @@ public class Database {
 	 * @throws Exception
 	 */
 	public IMondixInstance getMondixInstance() throws Exception {
-		MondixInstance<ImmutableMapRow> mondixInstance = new MondixInstance<ImmutableMapRow>(mondixRelations);
+		MondixInstance<ImmutableMapRow> mondixInstance = new MondixInstance<ImmutableMapRow>(mondixRelations, relationColumnNames);
 		return mondixInstance;
 	}
 	
@@ -142,7 +164,7 @@ public class Database {
 	 */
 	public ChangeAwareMondixInstance<ImmutableMapRow> getChangeAwareMondixInstance() throws Exception {
 		if (changeAwareMondixInstance == null) {
-			changeAwareMondixInstance = new ChangeAwareMondixInstance<ImmutableMapRow>(mondixRelations);
+			changeAwareMondixInstance = new ChangeAwareMondixInstance<ImmutableMapRow>(mondixRelations, relationColumnNames);
 		}
 		return changeAwareMondixInstance;
 	}

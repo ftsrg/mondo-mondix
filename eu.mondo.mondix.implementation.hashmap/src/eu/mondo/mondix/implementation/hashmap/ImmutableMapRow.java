@@ -1,7 +1,5 @@
 package eu.mondo.mondix.implementation.hashmap;
 
-import java.util.ArrayList;
-
 import com.google.common.collect.ImmutableMap;
 
 public class ImmutableMapRow implements AbstractRow {
@@ -17,11 +15,6 @@ public class ImmutableMapRow implements AbstractRow {
 		return row.get(key);
 	}
 	
-	@Override
-	public ArrayList<String> getColumns() {
-		return new ArrayList<String>(row.keySet());
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

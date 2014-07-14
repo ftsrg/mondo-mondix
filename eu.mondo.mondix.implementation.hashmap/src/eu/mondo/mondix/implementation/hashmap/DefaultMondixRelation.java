@@ -44,9 +44,9 @@ public class DefaultMondixRelation<Row extends AbstractRow> extends AbstractRela
 
 	@Override
 	public IQueryInstance openQueryInstance(List<String> selectedColumnNames, Map<String, Object> filter) {
-		if (getArity() == 1)
+		if (selectedColumnNames.size() == 1)
 			return new MondixUnaryQueryInstance<Row>(this, rows, selectedColumnNames, filter);
-		else if (getArity() == 0)
+		else if (selectedColumnNames.size() == 0)
 			return new MondixNullaryQueryInstance<Row>(this, rows, selectedColumnNames, filter);
 		return new MondixQueryInstance<Row>(this, rows, selectedColumnNames, filter);
 	}

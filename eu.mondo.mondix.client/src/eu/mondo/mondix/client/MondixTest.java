@@ -29,14 +29,14 @@ public class MondixTest {
 	protected Database db;
 	protected IMondixInstance mondixInstance;
 	protected IMondixRelation ageRelation;
+	protected HashSet<ImmutableMap<String, Object>> ages;
 	
 	@Before
 	public void setUp() throws Exception {
 		// create new database
 		db = new Database();
 		
-		// create new relations
-		HashSet<ImmutableMap<String, Object>> ages = new HashSet<ImmutableMap<String, Object>>();
+		ages = new HashSet<ImmutableMap<String, Object>>();
 		ImmutableMap<String, Object> age1 = ImmutableMap.<String, Object>builder()
 			    .put("name", "John").put("year", 26).build();
 		ages.add(age1);
@@ -46,10 +46,13 @@ public class MondixTest {
 		ImmutableMap<String, Object> age3 = ImmutableMap.<String, Object>builder()
 			    .put("name", "Jack").put("year", 26).build();
 		ages.add(age3);
-		db.addRelation("age", ages);
+		
+		ArrayList<String> columns = new ArrayList<String>();
+		columns.add("name");
+		columns.add("year");
+		db.addRelation("age", ages, columns);
 		
 		mondixInstance = db.getMondixInstance();
-		
     }
 	
 	@Test
@@ -129,6 +132,15 @@ public class MondixTest {
 		assertFalse(sbFiltered.toString().contains("\n  Jill\n  23\n"));
 		assertTrue(sbFiltered.toString().contains("\n  John\n  26\n"));
 		assertTrue(sbFiltered.toString().contains("\n  Jack\n  26\n"));
+		
+		// When new data is added to the relation, it does not reflected in the MondixInstance.
+		ImmutableMap<String, Object> age4 = ImmutableMap.<String, Object>builder()
+			    .put("name", "Jacob").put("year", 29).build();
+		ages.add(age4);
+		IMondixRelation ageRelation4 = mondixInstance.getBaseRelationByName("age");
+		IQueryInstance queryInstance4 = ageRelation4.openQueryInstance();
+		System.out.println(queryInstance4.getCountOfTuples());
+		assertEquals(3, queryInstance4.getCountOfTuples());
 	}
 	
 	private String tupleToString(List<?> tuple) {
@@ -140,11 +152,7 @@ public class MondixTest {
 		return sb.toString();
 	}
 	
-	@Test
-	public void testUnary() throws Exception {
-		// create new database
-		Database bikeDB = new Database();
-		
+	private HashSet<ImmutableMap<String, Object>> createBikesRelation() {
 		// create new relations
 		HashSet<ImmutableMap<String, Object>> bikes = new HashSet<ImmutableMap<String, Object>>();
 		ImmutableMap<String, Object> bike1 = ImmutableMap.<String, Object>builder()
@@ -156,7 +164,16 @@ public class MondixTest {
 		ImmutableMap<String, Object> bike3 = ImmutableMap.<String, Object>builder()
 			    .put("name", "Gepida").build();
 		bikes.add(bike3);
-		bikeDB.addRelation("bike", bikes);
+		
+		return bikes;
+	}
+	
+	@Test
+	public void testUnary() throws Exception {
+		// create new database
+		Database bikeDB = new Database();
+		HashSet<ImmutableMap<String, Object>> bikes = createBikesRelation();
+		bikeDB.addRelation("bike", bikes, null);
 		
 		IMondixInstance mondixInstance = bikeDB.getMondixInstance();
 		
@@ -174,12 +191,17 @@ public class MondixTest {
 	public void testNullary() throws Exception {
 		// create new database
 		Database unaryDB = new Database();
-		
+
 		// create new relations
 		HashSet<ImmutableMap<String, Object>> unaryTuples = new HashSet<ImmutableMap<String, Object>>();
 		ImmutableMap<String, Object> emptyTuple = ImmutableMap.<String, Object>builder().build();
 		unaryTuples.add(emptyTuple);
-		unaryDB.addRelation("exists", unaryTuples);
+		unaryDB.addRelation("exists", unaryTuples, null);
+
+		// create new relations
+		HashSet<ImmutableMap<String, Object>> unaryTuplesF = new HashSet<ImmutableMap<String, Object>>();
+		ArrayList<String> columns = new ArrayList<String>();
+		unaryDB.addRelation("notExists", unaryTuplesF, columns);
 		
 		IMondixInstance mondixInstance = unaryDB.getMondixInstance();
 		
@@ -187,27 +209,37 @@ public class MondixTest {
 		INullaryQueryInstance nullaryExistsQueryInstance = (INullaryQueryInstance) nullaryExistsRelation.openQueryInstance();
 		System.out.println(nullaryExistsQueryInstance.isTrue());
 		assertTrue(nullaryExistsQueryInstance.isTrue());
+		
+		IMondixRelation nullaryExistsRelationF = mondixInstance.getBaseRelationByName("notExists");
+		INullaryQueryInstance nullaryExistsQueryInstanceF = (INullaryQueryInstance) nullaryExistsRelationF.openQueryInstance();
+		System.out.println(nullaryExistsQueryInstanceF.isTrue());
+		assertFalse(nullaryExistsQueryInstanceF.isTrue());
     }
 	
-	@Test
-	public void live() throws Exception {
+	private IChangeAwareMondixInstance setupChangeAwareMI() throws Exception {
 		// create new database
 		db = new Database();
-		
+
 		// create new relations
 		HashSet<ImmutableMap<String, Object>> ages = new HashSet<ImmutableMap<String, Object>>();
 		ImmutableMap<String, Object> age1 = ImmutableMap.<String, Object>builder()
-			    .put("name", "John").put("year", 26).build();
+				.put("name", "John").put("year", 26).build();
 		ages.add(age1);
 		ImmutableMap<String, Object> age2 = ImmutableMap.<String, Object>builder()
-			    .put("name", "Jill").put("year", 23).build();
+				.put("name", "Jill").put("year", 23).build();
 		ages.add(age2);
 		ImmutableMap<String, Object> age3 = ImmutableMap.<String, Object>builder()
-			    .put("name", "Jack").put("year", 26).build();
+				.put("name", "Jack").put("year", 26).build();
 		ages.add(age3);
-		db.addRelation("age", ages);
-		
+		db.addRelation("age", ages, null);
+
 		IChangeAwareMondixInstance changeAwareMondixInstance = db.getChangeAwareMondixInstance();
+		return changeAwareMondixInstance;
+	}
+	
+	@Test
+	public void live() throws Exception {
+		IChangeAwareMondixInstance changeAwareMondixInstance = setupChangeAwareMI();
 		IChangeAwareMondixRelation liveAgeRelation = (IChangeAwareMondixRelation) changeAwareMondixInstance.getBaseRelationByName("age");
 		ILiveQueryInstance liveQueryInstance = liveAgeRelation.openQueryInstance();
 		
@@ -316,5 +348,46 @@ public class MondixTest {
 		assertTrue(sbFiltered4.toString().contains("\n  Jenny\n  26\n"));
 		assertFalse(sbFiltered4.toString().contains("\n  Johanna\n  26\n"));
     }
+	
+
+	@Test
+	public void addRelation() throws Exception {
+		// test adding relation to change-aware instances
+		
+		// create age relation, bike relation does not exist
+		IChangeAwareMondixInstance changeAwareMondixInstance = setupChangeAwareMI();
+		Iterable<? extends Object> relationNames = changeAwareMondixInstance.getPublishedRelationNames().getValues();
+		StringBuilder sb = new StringBuilder();
+		for(Object relationName : relationNames) {
+			sb.append((String) relationName).append("\n"); 
+		}
+		System.out.println(sb);
+		assertTrue(sb.toString().contains("age"));
+		assertFalse(sb.toString().contains("bike"));
+		
+		// add bike relation
+		HashSet<ImmutableMap<String, Object>> bikes = createBikesRelation();
+		db.addRelation("bike", bikes, null);
+		relationNames = changeAwareMondixInstance.getPublishedRelationNames().getValues();
+		sb = new StringBuilder();
+		for(Object relationName : relationNames) {
+			sb.append((String) relationName).append("\n"); 
+		}
+		System.out.println(sb);
+		assertTrue(sb.toString().contains("age"));
+		assertTrue(sb.toString().contains("bike"));
+		
+		// remove age relation from live mondix instance
+		db.removeRelation("age");
+		relationNames = changeAwareMondixInstance.getPublishedRelationNames().getValues();
+		sb = new StringBuilder();
+		for(Object relationName : relationNames) {
+			sb.append((String) relationName).append("\n"); 
+		}
+		System.out.println(sb);
+		assertFalse(sb.toString().contains("age"));
+		assertTrue(sb.toString().contains("bike"));
+
+	}
 	
 }
