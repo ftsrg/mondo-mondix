@@ -45,13 +45,19 @@ public class MondixQueryInstance<Row extends AbstractRow> implements IQueryInsta
 		for(Row row : rows) {
 			// selected columns for matching tuples
 			if (isMatch(row, filter)) {
-				ArrayList<Object> tuple = createTuple(selectedColumnNames, row);
+				ArrayList<Object> tuple = createTuple(row, selectedColumnNames);
 				tuples.add(tuple);
 			}
 		}
 	}
 	
-	protected ArrayList<Object> createTuple(List<String> selectedColumnNames, AbstractRow row) {
+	/**
+	 * Project input tuple.
+	 * @param row input tuple
+	 * @param selectedColumnNames projected attribute names
+	 * @return projected tuple
+	 */
+	protected ArrayList<Object> createTuple(AbstractRow row, List<String> selectedColumnNames) {
 		ArrayList<Object> tuple = new ArrayList<Object>();
 		for(String selectedColumnName : selectedColumnNames) {
 			Object value = row.getValue(selectedColumnName);
@@ -60,6 +66,12 @@ public class MondixQueryInstance<Row extends AbstractRow> implements IQueryInsta
 		return tuple;
 	}
 	
+	/**
+	 * Test whether row is matching with the filter.
+	 * @param row input tuple
+	 * @param filter bound attributes
+	 * @return true, iff bound attribute values are the same in the input tuple
+	 */
 	protected boolean isMatch(AbstractRow row, Map<String, Object> filter) {
 		boolean isMatch = true;
 		for(Entry<String, Object> filterEntry : filter.entrySet()) {

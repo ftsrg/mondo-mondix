@@ -18,7 +18,10 @@ public class LiveNullaryQueryInstance<Row extends AbstractRow> extends LiveQuery
 			List<String> selectedColumnNames, Map<String, Object> filter) {
 		super(changeAwaremondixRelation, rows, selectedColumnNames, filter);
 	}
-
+	
+	/**
+	 * Reduce implementation to the basic Mondix case.
+	 */
 	@Override
 	public boolean isTrue() {
 		return MondixNullaryQueryInstance.isTrue(tuples);

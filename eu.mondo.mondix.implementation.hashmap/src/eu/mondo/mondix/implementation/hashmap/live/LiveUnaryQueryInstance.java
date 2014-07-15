@@ -19,7 +19,7 @@ public class LiveUnaryQueryInstance<Row extends AbstractRow> extends LiveQueryIn
 			List<String> selectedColumnNames, Map<String, Object> filter) {
 		super(changeAwaremondixRelation, rows, selectedColumnNames, filter);
 	}
-
+	
 	@Override
 	public Iterable<? extends Object> getValues() {
 		return MondixUnaryQueryInstance.getValues(tuples);

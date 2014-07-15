@@ -11,14 +11,17 @@ import eu.mondo.mondix.implementation.hashmap.DefaultMondixRelation;
 import eu.mondo.mondix.live.IChangeAwareMondixRelation;
 
 public class ChangeAwareMondixRelation<Row extends AbstractRow> extends DefaultMondixRelation<Row> implements IChangeAwareMondixRelation {
-
+	
+	/**
+	 * Store live instances to notify them from changes.
+	 */
 	Set<LiveQueryInstance<Row>> liveQueryInstances;
 	
 	public ChangeAwareMondixRelation(IMondixInstance mondixInstance, String name, List<String> columns, Set<Row> data) {
 		super(mondixInstance, name, columns, data);
 		liveQueryInstances = new HashSet<LiveQueryInstance<Row>>();
 	}
-
+	
 	@Override
 	public LiveQueryInstance<Row> openQueryInstance() {
 		LiveQueryInstance<Row> liveQueryInstance;
@@ -45,12 +48,21 @@ public class ChangeAwareMondixRelation<Row extends AbstractRow> extends DefaultM
 		return liveQueryInstance;
 	}
 	
+	/**
+	 * Forward changes to query instances.
+	 * @param row added tuple
+	 */
 	public void addRow(Row row) {
 		rows.add(row);
 		for(LiveQueryInstance<Row> liveQueryInstance : liveQueryInstances) {
 			liveQueryInstance.addRow(row);
 		}
 	}
+	
+	/**
+	 * Forward changes to query instances.
+	 * @param row removed tuple
+	 */
 	public void removeRow(Row row) {
 		rows.remove(row);
 		for(LiveQueryInstance<Row> liveQueryInstance : liveQueryInstances) {
@@ -58,6 +70,10 @@ public class ChangeAwareMondixRelation<Row extends AbstractRow> extends DefaultM
 		}
 	}
 	
+	/**
+	 * Terminate notificating the given queryinstance.
+	 * @param liveQueryInstance
+	 */
 	public void removeLiveQueryInstance(LiveQueryInstance<Row> liveQueryInstance) {
 		liveQueryInstances.remove(liveQueryInstance);
 	}

@@ -16,8 +16,15 @@ import eu.mondo.mondix.live.IChangeAwareMondixRelation;
 import eu.mondo.mondix.live.IConsistencyCallback;
 
 public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixInstance<Row> implements IChangeAwareMondixInstance {
-
+	
+	/**
+	 * Clients to be notified from the consistency of the whole Mondix instance. 
+	 */
 	protected HashSet<IConsistencyCallback> consistencyListeners;
+	
+	/**
+	 * Mondix relations within the instance.
+	 */
 	private Map<String, ChangeAwareMondixRelation<Row>> changeAwareMondixRelations;
 
 	public ChangeAwareMondixInstance(Map<String, Set<Row>> mxRelations, Map<String, List<String>> relationColumnNames) throws Exception {
@@ -44,8 +51,10 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 	@Override
 	public ChangeAwareMondixRelation<? extends AbstractRow> getBaseRelationByName(String relationName) {
 		if ("".equals(relationName))
+			// return catalog relation
 			return catalogRelation;
 		else {
+			// lazy instantiate change-aware relations
 			ChangeAwareMondixRelation<Row> changeAwareMondixRelation;
 			if (changeAwareMondixRelations.get(relationName) != null) {
 				changeAwareMondixRelation = changeAwareMondixRelations.get(relationName);
@@ -64,37 +73,67 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 		return getBaseRelationByName("");
 	}
 	
+	/**
+	 * Add a new relation to Mondix
+	 * @param relationName name of the relation
+	 * @param relation rows in the relation
+	 * @param columns name of attributes in an ordered list
+	 */
 	public void addRelation(String relationName, HashSet<Row> relation, List<String> columns) {
+		// sync relation and attribute names
 		relations.put(relationName, relation);
 		relationColumnNames.put(relationName, columns);
 		
+		// sync catalog relation
 		ImmutableMapRow row = new ImmutableMapRow(ImmutableMap.<String, String>builder().put("name", relationName).build());
 		catalogRelation.addRow(row);
 	}
 	
+	/**
+	 * Remove a relation from Mondix
+	 * @param relationName name of the relation
+	 */
 	public void removeRelation(String relationName) {
+		// sync relation and attribute names
 		relations.remove(relationName);
 		relationColumnNames.remove(relationName);
 		
+		// sync catalog relation
 		ImmutableMapRow row = new ImmutableMapRow(ImmutableMap.<String, String>builder().put("name", relationName).build());
 		catalogRelation.removeRow(row);
 	}
 	
+	/**
+	 * Add tuple to a relation.
+	 * @param relationName name of the relation
+	 * @param row added tuple
+	 */
 	public void addRow(String relationName, Row row) {
+		// sync relation data
 		Set<Row> relation = relations.get(relationName);
 		relation.add(row);
 		
+		// notify relation from new data
 		changeAwareMondixRelations.get(relationName).addRow(row);
 		
+		// send consistency notifications
 		notifyConsistencyListeners();
 	}
-
+	
+	/**
+	 * Remove tuple from a relation
+	 * @param relationName name of relation
+	 * @param row tuple to be removed
+	 */
 	public void removeRow(String relationName, Row row) {
+		// sync relation data
 		Set<Row> relation = relations.get(relationName);
 		relation.remove(row);
 		
+		// notify relation from deleted data
 		changeAwareMondixRelations.get(relationName).removeRow(row);
 		
+		// send consistency notifications
 		notifyConsistencyListeners();
 	}
 		

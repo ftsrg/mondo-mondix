@@ -2,8 +2,15 @@ package eu.mondo.mondix.implementation.hashmap;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * Row using ImmutableMap as data, implementing the AbstractRow interface for the generic Mondix implementation.
+ *
+ */
 public class ImmutableMapRow implements AbstractRow {
-
+	
+	/**
+	 * Row as a Guava ImmutableMap
+	 */
 	ImmutableMap<String, ? extends Object> row;
 	
 	public ImmutableMapRow(ImmutableMap<String, ? extends Object> row) {
@@ -15,6 +22,9 @@ public class ImmutableMapRow implements AbstractRow {
 		return row.get(key);
 	}
 	
+	/**
+	 * Two ImmutableMapRows hashCode are equal, if the ImmutableMaps are equal.
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -22,7 +32,10 @@ public class ImmutableMapRow implements AbstractRow {
 		result = prime * result + ((row == null) ? 0 : row.hashCode());
 		return result;
 	}
-
+	
+	/**
+	 * Two ImmutableMapRows are equal, iff the ImmutableMaps are equal.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

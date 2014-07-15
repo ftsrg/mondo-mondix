@@ -25,7 +25,12 @@ public class MondixUnaryQueryInstance<Row extends AbstractRow> extends
 		return getValues(tuples);
 	}
 	
-	public static Iterable<? extends Object> getValues(HashSet<List<Object>> tuples) {
+	/**
+	 * Unbox unary tuples.
+	 * @param tuples input tuple set
+	 * @return unboxed objects
+	 */
+	public static Iterable<? extends Object> getValues(Set<List<Object>> tuples) {
 		HashSet<Object> values = new HashSet<Object>();
 		for(List<Object> tuple : tuples) {
 			Object value = tuple.get(0);
