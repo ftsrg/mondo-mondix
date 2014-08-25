@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mondix
-Bundle-SymbolicName: eu.mondo.mondix
-Bundle-Version: 0.1.0.qualifier
+Bundle-Name: Mondix Interface Specifications
+Bundle-SymbolicName: eu.mondo.mondix.interfaces
+Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: eu.mondo.mondix.core,
  eu.mondo.mondix.live
