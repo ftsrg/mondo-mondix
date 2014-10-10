@@ -1,0 +1,7 @@
+eu.mondo.mondix.client
+eu.mondo.mondix.core
+eu.mondo.mondix.implementation.hashmap
+eu.mondo.mondix.implementation.hashmap.database
+eu.mondo.mondix.implementation.hashmap.live
+eu.mondo.mondix.implementation.hashmap.util
+eu.mondo.mondix.live
