@@ -16,6 +16,18 @@ package eu.mondo.mondix.core;
  * 
  * <p> A catalog relation is also published for reflectively querying the set of published relations.
  * 
+ * <p> Guarantees: <ul>
+ *  <li> Knowledge is published through relations in an uniformized way (e.g. via Object-Relational Mapping) </li>
+ *  <li> Fast answers are guaranteed for core queries (linear in answer size, up to a one-time initialization cost) </li>
+ * </ul>
+ * <p> Non-guarantees: <ul>
+ *  <li> Mondix is read only, no mandatory write API. </li>
+ *  <li> Only core queries offered - complex query engines should be implemented on top of mondix. </li>
+ *  <li> No guarantees of distributing the semantics of the schema / metamodel. 
+ *  	The schema of base relations is discoverable, but clients should know the semantics beforehand. </li>
+ * </ul>
+ * 
+ * 
  * @author Bergmann Gabor
  */
 public interface IMondixInstance {

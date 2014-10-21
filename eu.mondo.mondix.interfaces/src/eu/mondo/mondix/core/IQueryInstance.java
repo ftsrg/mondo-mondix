@@ -19,6 +19,9 @@ import java.util.Map;
  * A query with potential parameter substitutions (seed). 
  * 
  * <p>The query results are obtained from a base relation by seeding it with a query.
+ * <p>Performance guarantee: query operations should be quick (execution time proportional to result size). 
+ * 	A potential one-time initialization cost can be associated with obtaining the query instance.
+ * <p>The query instance should be disposed if no longer used, and should not be used after disposal.
  * 
  * <p>See also interface extensions {@link IUnaryQueryInstance}, {@link INullaryQueryInstance}, {@link IQueryInstanceDirect}
  * 
