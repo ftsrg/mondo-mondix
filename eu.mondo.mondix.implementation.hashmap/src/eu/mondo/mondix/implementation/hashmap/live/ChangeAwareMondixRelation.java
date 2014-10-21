@@ -10,6 +10,7 @@ import eu.mondo.mondix.implementation.hashmap.AbstractRow;
 import eu.mondo.mondix.implementation.hashmap.DefaultMondixRelation;
 import eu.mondo.mondix.live.IChangeAwareMondixRelation;
 
+// TODO move add/remove row methods to subclass (not all change-aware relations need be like this)
 public class ChangeAwareMondixRelation<Row extends AbstractRow> extends DefaultMondixRelation<Row> implements IChangeAwareMondixRelation {
 	
 	/**

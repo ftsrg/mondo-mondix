@@ -19,6 +19,11 @@ import eu.mondo.mondix.implementation.hashmap.live.ChangeAwareMondixRelation;
  * A static Mondix instance working with HashMap based relations.
  *
  * @param <Row> Any type implementing the AbstractRow interface containing immutable objects.
+ * 
+ * TODO: make extensible by custom relations at run-time, as opposed to upfront initialization (done in change-aware)
+ * TODO: make extensible by arbitrary types of relations
+ * TODO: remove lazy relation initialization
+ * TODO: fix getPublishedRelationNames to proper projection 
  */
 public class MondixInstance<Row extends AbstractRow> implements IMondixInstance {
 	

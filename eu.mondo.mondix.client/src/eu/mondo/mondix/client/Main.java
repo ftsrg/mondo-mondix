@@ -1,5 +1,6 @@
 package eu.mondo.mondix.client;
 
+// TODO add an interactive client
 public class Main {
 
 	public static void main(String[] args) throws Exception {

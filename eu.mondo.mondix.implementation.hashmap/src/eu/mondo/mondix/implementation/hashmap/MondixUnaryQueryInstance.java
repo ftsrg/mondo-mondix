@@ -8,6 +8,7 @@ import java.util.Set;
 import eu.mondo.mondix.core.IMondixRelation;
 import eu.mondo.mondix.core.IUnaryQueryInstance;
 
+// TODO pre-cache getValues() ?
 public class MondixUnaryQueryInstance<Row extends AbstractRow> extends
 		MondixQueryInstance<Row> implements IUnaryQueryInstance {
 

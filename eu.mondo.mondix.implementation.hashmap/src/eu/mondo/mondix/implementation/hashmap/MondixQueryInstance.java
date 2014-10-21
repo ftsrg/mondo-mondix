@@ -11,6 +11,11 @@ import java.util.Set;
 import eu.mondo.mondix.core.IMondixRelation;
 import eu.mondo.mondix.core.IQueryInstance;
 
+//TODO generalize construction with Set<Row> -->> Iterable<? extends Row> 
+//TODO explain in Javadoc how this constructor parameter may already be prefiltered (e.g. based on another indexer)
+//TODO share index contents between query instances
+//TODO instead of current Row interface, do something along the lines of RowInterpreter, and/or map filter condition to column indices
+
 public class MondixQueryInstance<Row extends AbstractRow> implements IQueryInstance {
 	
 	protected IMondixRelation mondixRelation;

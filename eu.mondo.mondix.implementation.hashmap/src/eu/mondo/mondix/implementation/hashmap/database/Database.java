@@ -18,6 +18,7 @@ import eu.mondo.mondix.implementation.hashmap.live.ChangeAwareMondixInstance;
  * Database containing HashMap-based relations.
  *
  */
+// TODO remove / relocate
 public class Database {
 	/**
 	 * Relations identified by string, row values identified by string as attribute.

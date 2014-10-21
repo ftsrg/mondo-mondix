@@ -2,6 +2,7 @@ package eu.mondo.mondix.implementation.hashmap.util;
 
 import java.util.List;
 
+// TODO unused, remove
 public class Util {
 	/**
 	 * Print tuples to stdout.
@@ -24,7 +25,7 @@ public class Util {
 			if (v instanceof String)
 				System.out.println("  Value[" + i + "]: " + (String)v);
 			else if (v instanceof Integer)
-				System.out.println("  Value[" + i + "]: " + (Integer)v);
+				System.out.println("  Value[" + i + "]: " + v);
 			i++;
 		}
 	}

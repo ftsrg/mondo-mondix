@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Row using ImmutableMap as data, implementing the AbstractRow interface for the generic Mondix implementation.
  *
+ * TODO: List-based version (less memory?)
  */
 public class ImmutableMapRow implements AbstractRow {
 	
