@@ -15,6 +15,7 @@ import eu.mondo.mondix.live.IChangeAwareMondixInstance;
 import eu.mondo.mondix.live.IChangeAwareMondixRelation;
 import eu.mondo.mondix.live.IConsistencyCallback;
 
+// TODO add real consistency notifications after bigger transaction units
 public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixInstance<Row> implements IChangeAwareMondixInstance {
 	
 	/**
