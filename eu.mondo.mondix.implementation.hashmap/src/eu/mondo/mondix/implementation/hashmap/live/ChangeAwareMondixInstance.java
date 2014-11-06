@@ -55,18 +55,23 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 			// return catalog relation
 			return catalogRelation;
 		else {
-			// lazy instantiate change-aware relations
-			ChangeAwareMondixRelation<Row> changeAwareMondixRelation;
-			if (changeAwareMondixRelations.get(relationName) != null) {
-				changeAwareMondixRelation = changeAwareMondixRelations.get(relationName);
-			} else {
-				Set<Row> relation = relations.get(relationName);
-				List<String> columns = relationColumnNames.get(relationName);
-				changeAwareMondixRelation = new ChangeAwareMondixRelation<Row>(this, relationName, columns, relation);
-				changeAwareMondixRelations.put(relationName, changeAwareMondixRelation);
-			}
-			return changeAwareMondixRelation;
+			return getNonCatalogBaseRelationByName(relationName);
 		}
+	}
+
+	protected ChangeAwareMondixRelation<Row> getNonCatalogBaseRelationByName(
+			String relationName) {
+		// lazy instantiate change-aware relations
+		ChangeAwareMondixRelation<Row> changeAwareMondixRelation;
+		if (changeAwareMondixRelations.get(relationName) != null) {
+			changeAwareMondixRelation = changeAwareMondixRelations.get(relationName);
+		} else {
+			Set<Row> relation = relations.get(relationName);
+			List<String> columns = relationColumnNames.get(relationName);
+			changeAwareMondixRelation = new ChangeAwareMondixRelation<Row>(this, relationName, columns, relation);
+			changeAwareMondixRelations.put(relationName, changeAwareMondixRelation);
+		}
+		return changeAwareMondixRelation;
 	}
 
 	@Override
@@ -110,12 +115,15 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 	 * @param row added tuple
 	 */
 	public void addRow(String relationName, Row row) {
+		if ("".equals(relationName))
+			throw new IllegalArgumentException("Cannot directly manipulate the catalog relation!");
+		
 		// sync relation data
 		Set<Row> relation = relations.get(relationName);
 		relation.add(row);
 		
 		// notify relation from new data
-		changeAwareMondixRelations.get(relationName).addRow(row);
+		getNonCatalogBaseRelationByName(relationName).addRow(row);
 		
 		// send consistency notifications
 		notifyConsistencyListeners();
@@ -127,12 +135,15 @@ public class ChangeAwareMondixInstance<Row extends AbstractRow> extends MondixIn
 	 * @param row tuple to be removed
 	 */
 	public void removeRow(String relationName, Row row) {
+		if ("".equals(relationName))
+			throw new IllegalArgumentException("Cannot directly manipulate the catalog relation!");
+		
 		// sync relation data
 		Set<Row> relation = relations.get(relationName);
 		relation.remove(row);
 		
 		// notify relation from deleted data
-		changeAwareMondixRelations.get(relationName).removeRow(row);
+		getNonCatalogBaseRelationByName(relationName).removeRow(row);
 		
 		// send consistency notifications
 		notifyConsistencyListeners();
