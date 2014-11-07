@@ -5,17 +5,17 @@ Mondix – the MONDO Indexer
 
 The **mondix** API is a **uniform interface** for publishing knowledge in a **read-only** way. 
 
-The mondix interface is intended to be implemented by **model indexers** and other sources of knowledge in a scalable model management context; such mondix backends are sometimes called **mondixer**s. 
+The mondix interface is intended to be implemented by **model indexers** and other sources of knowledge in a scalable model management context; such mondix backends are sometimes called **mondixers**. 
 
-The mondix interface is intended to be used by **mondix client**s that extract and process knowledge published by mondixers; a typical mondix client could be a **complex model query engine** that performs computations and provides results to users based on information (such as knowledge about models) provided by one or more mondixers.
+The mondix interface is intended to be used by **mondix clients** that extract and process knowledge published by mondixers; a typical mondix client could be a **complex model query engine** that performs computations and provides results to users based on information (such as knowledge about models) provided by one or more mondixers.
 
 ##Overview of data model and operations of mondix
 
 A mondixer publishes knowledge in a **relational format**, as a set of named **base relations**. The names of published relations is exposed through a special **catalog relation** (with an empty string for name). Each base relation defines an ordered list of named columns. A base relation is conceptually said to contain rows, each of which is a tuple containing a value for each column of the relation. 
 
-The client can open **query instance**s (also known as **relational view**s) from a base relation. A query instance indicates a specific intention of the client to obtain knowledge from a base relation, and may be (should be) disposed if no longer relevant for the client. Each query instance specifies a relational view on the base relation that (a) considers only those rows of the relation that take given values at given columns, and take arbitrary values at the other columns; (b) exposes only the given subset of relation columns in query results; (c) is a relation, i.e. without duplicate rows. 
+The client can open **query instances** (also known as **relational views**) from a base relation. A query instance indicates a specific intention of the client to obtain knowledge from a base relation, and may be (should be) disposed if no longer relevant for the client. Each query instance specifies a relational view on the base relation that (a) considers only those rows of the relation that take given values at given columns, and take arbitrary values at the other columns; (b) exposes only the given subset of relation columns in query results; (c) is a relation, i.e. without duplicate rows. 
 
-Having specified query instances, the client can invoke at least two **query operation**s to actually obtain results: retrieving all (filtered, projected) rows of the query instance, and counting the number of such rows (without enumerating them all).
+Having specified query instances, the client can invoke at least two **query operations** to actually obtain results: retrieving all (filtered, projected) rows of the query instance, and counting the number of such rows (without enumerating them all).
  
 ##Guarantees and responsibilities 
 
