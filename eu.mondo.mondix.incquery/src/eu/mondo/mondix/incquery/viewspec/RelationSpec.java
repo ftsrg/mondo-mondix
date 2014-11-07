@@ -15,7 +15,7 @@ package eu.mondo.mondix.incquery.viewspec;
  * @author Bergmann Gabor
  *
  */
-public class RelationSpec {
+public class RelationSpec extends InputSpec {
 	
 	private String relationName;
 	private int arity;

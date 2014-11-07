@@ -33,30 +33,40 @@ public class MyMondixModel {
 		return mondixer;
 	}
 	
-	
-
 	public MyMondixModel() {
 		try {
 			mondixer = new ChangeAwareMondixInstance<>(new HashMap(), new HashMap());
-			
-			mondixer.addRelation("fooUnary", new HashSet<ImmutableMapRow>(), Arrays.asList("XCol"));
-			mondixer.addRow("fooUnary", new ImmutableMapRow(ImmutableMap.of("XCol", "x1")));
-			mondixer.addRow("fooUnary", new ImmutableMapRow(ImmutableMap.of("XCol", "x2")));
-			
-			
-			mondixer.addRelation("fooBinary", new HashSet<ImmutableMapRow>(), Arrays.asList("XCol", "YCol"));
-			mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x1", "YCol", "y1")));
-			mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x1", "YCol", "y2")));
-			mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x2", "YCol", "y1")));
-			mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x2", "YCol", "y3")));
-			mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x3", "YCol", "y2")));
-			mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x3", "YCol", "y4")));
-			
+			initModel();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+
+	}
+
+	private void initModel() {
+		mondixer.addRelation("fooUnary", new HashSet<ImmutableMapRow>(), Arrays.asList("XCol"));
+		mondixer.addRow("fooUnary", new ImmutableMapRow(ImmutableMap.of("XCol", "x1")));
+		mondixer.addRow("fooUnary", new ImmutableMapRow(ImmutableMap.of("XCol", "x2")));
+		
+		
+		mondixer.addRelation("fooBinary", new HashSet<ImmutableMapRow>(), Arrays.asList("XCol", "YCol"));
+		mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x1", "YCol", "y1")));
+		mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x1", "YCol", "y2")));
+		mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x2", "YCol", "y1")));
+		mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x2", "YCol", "y3")));
+		mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x3", "YCol", "y2")));
+		mondixer.addRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x3", "YCol", "y4")));
 	}
 	
+	public void modifyModel() {
+		if (modificationPerformed) throw new IllegalStateException();
+		modificationPerformed = true;
+		
+		mondixer.addRow("fooUnary", new ImmutableMapRow(ImmutableMap.of("XCol", "x3")));
+		mondixer.removeRow("fooBinary", new ImmutableMapRow(ImmutableMap.of("XCol", "x2", "YCol", "y3")));
+	}
+	boolean modificationPerformed = false;
 
 }

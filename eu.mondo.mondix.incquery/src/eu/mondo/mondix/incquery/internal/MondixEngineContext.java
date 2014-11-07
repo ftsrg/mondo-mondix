@@ -68,6 +68,7 @@ public class MondixEngineContext implements IEngineContext {
 	public void dispose() {
 		if (matcherContext != null) matcherContext.dispose();
 		//if (navHelper != null) navHelper.dispose();
+		if (baseIndex != null) baseIndex.dispose();
 		
 		this.baseIndex = null;
 		this.mondixScope = null;

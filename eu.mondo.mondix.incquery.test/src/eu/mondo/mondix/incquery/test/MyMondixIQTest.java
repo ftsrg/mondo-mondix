@@ -35,11 +35,20 @@ public class MyMondixIQTest {
 		MyMondixQuery query = new MyMondixQuery();
 		MondixMatcher matcher = engine.getMatcher(query);
 		
-		Assert.assertEquals(4, matcher.countMatches());
 		Assert.assertTrue(matcher.hasMatch(query.newMatch("x1", "y1")));
 		Assert.assertTrue(matcher.hasMatch(query.newMatch("x1", "y2")));
 		Assert.assertTrue(matcher.hasMatch(query.newMatch("x2", "y1")));
 		Assert.assertTrue(matcher.hasMatch(query.newMatch("x2", "y3")));
+		Assert.assertEquals(4, matcher.countMatches());
+		
+		model.modifyModel();
+		Assert.assertTrue(matcher.hasMatch(query.newMatch("x1", "y1")));
+		Assert.assertTrue(matcher.hasMatch(query.newMatch("x1", "y2")));
+		Assert.assertTrue(matcher.hasMatch(query.newMatch("x2", "y1")));
+		//Assert.assertTrue(matcher.hasMatch(query.newMatch("x2", "y3")));
+		Assert.assertTrue(matcher.hasMatch(query.newMatch("x3", "y2")));
+		Assert.assertTrue(matcher.hasMatch(query.newMatch("x3", "y4")));
+		Assert.assertEquals(5, matcher.countMatches());
 	}
 
 }

@@ -12,10 +12,7 @@
 package eu.mondo.mondix.incquery.internal;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
@@ -23,11 +20,9 @@ import org.eclipse.incquery.runtime.api.IncQueryEngine;
 import org.eclipse.incquery.runtime.matchers.context.IPatternMatcherRuntimeContext;
 import org.eclipse.incquery.runtime.matchers.context.IPatternMatcherRuntimeContextListener;
 
-import eu.mondo.mondix.core.IMondixInstance;
-import eu.mondo.mondix.core.IMondixRelation;
 import eu.mondo.mondix.core.IQueryInstance;
 import eu.mondo.mondix.incquery.runtime.MondixPatternMatcherContext;
-import eu.mondo.mondix.incquery.viewspec.RelationSpec;
+import eu.mondo.mondix.incquery.viewspec.InputSpec;
 
 /**
  * @author Bergmann Gabor
@@ -39,7 +34,6 @@ public class MondixPatternMatcherRuntimeContext extends MondixPatternMatcherCont
 	private IncQueryEngine engine;
 	private Logger logger;
 	private MondixBaseIndex baseIndex;
-	private IMondixInstance mondixer;
 
 	public MondixPatternMatcherRuntimeContext(IncQueryEngine engine,
 			Logger logger, MondixBaseIndex baseIndex) {
@@ -47,55 +41,29 @@ public class MondixPatternMatcherRuntimeContext extends MondixPatternMatcherCont
 				this.logger = logger;
 				this.baseIndex = baseIndex;
 				
-				mondixer = this.baseIndex.getMondixScope().getMondixer();
 	}
-	
-	IQueryInstance toQueryInstance(Object typeObject) {
-		IQueryInstance iQueryInstance = openQueryInstances.get(typeObject);
-		if (iQueryInstance == null) {
-			// TODO add ViewSpec
-			final RelationSpec spec = (RelationSpec)typeObject;
-			final String relationName = spec.getRelationName();
-			
-			IMondixRelation relation = mondixer.getBaseRelationByName(relationName);
-			if (relation == null)
-				throw new IllegalArgumentException("Expected " + spec + " not found");
-			if (relation.getColumns().size() != spec.getArity())
-				throw new IllegalArgumentException("Expected " + spec + " found instead arity: " + spec.getArity());
-			
-			iQueryInstance = relation.openQueryInstance();
-		}
-		return iQueryInstance;
-	}
-	Map<Object, IQueryInstance> openQueryInstances = new HashMap<Object, IQueryInstance>();
-	
 
 	public void dispose() {
-		Collection<IQueryInstance> values = openQueryInstances.values();
-		for (IQueryInstance iQueryInstance : values) {
-			iQueryInstance.dispose();
-		}
-		
-		openQueryInstances = null;
 		engine = null;
 		baseIndex = null;
 		logger = null;
-		this.mondixer = null;
 	}
 
+	protected IQueryInstance toQueryInstance(Object typeObject) {
+		return baseIndex.toQueryInstance((InputSpec) typeObject);
+	}
 	
 	
 	@Override
 	public void subscribeBackendForUpdates(
 			IPatternMatcherRuntimeContextListener contextListener) {
-		// TODO add change-awareness
-
+		baseIndex.subscribeBackendForUpdates(contextListener);
 	}
 
 	@Override
 	public void unSubscribeBackendFromUpdates(
 			IPatternMatcherRuntimeContextListener contextListener) {
-		// TODO add change-awareness
+		baseIndex.unSubscribeBackendFromUpdates(contextListener);
 	}
 
 	@Override
@@ -131,6 +99,7 @@ public class MondixPatternMatcherRuntimeContext extends MondixPatternMatcherCont
 			crawler.crawl(tuple.get(0));
 		}
 	}
+
 
 	@Override
 	public void enumerateDirectTernaryEdgeInstances(Object typeObject,
