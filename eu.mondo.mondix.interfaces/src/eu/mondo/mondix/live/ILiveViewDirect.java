@@ -11,17 +11,17 @@
 
 package eu.mondo.mondix.live;
 
-import eu.mondo.mondix.core.IQueryInstanceDirect;
+import eu.mondo.mondix.core.IViewDirect;
 
 /**
- * A live query instance that exposes its tuples through a direct interface.
+ * A live mondix view that exposes its tuples through a direct interface.
  * @author Bergmann Gabor
  *
  */
-public interface ILiveQueryInstanceDirect<Row> extends IQueryInstanceDirect<Row>, ILiveQueryInstance {
+public interface ILiveViewDirect<Row> extends IViewDirect<Row>, ILiveView {
 	/**
 	 * The given listener will be notified of changes from now on. 
-	 * The change listener will have to be removed before disposing the query instance.
+	 * The change listener will have to be removed before disposing the mondix view.
 	 */
 	public void addChangeListener(IChangeCallbackDirect<Row> changeListener);
 	

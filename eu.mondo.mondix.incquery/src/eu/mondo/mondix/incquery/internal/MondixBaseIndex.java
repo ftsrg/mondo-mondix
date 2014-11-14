@@ -31,12 +31,12 @@ import com.google.common.collect.Multimap;
 
 import eu.mondo.mondix.core.IMondixInstance;
 import eu.mondo.mondix.core.IMondixRelation;
-import eu.mondo.mondix.core.IQueryInstance;
+import eu.mondo.mondix.core.IMondixView;
 import eu.mondo.mondix.incquery.MondixScope;
 import eu.mondo.mondix.incquery.viewspec.InputSpec;
 import eu.mondo.mondix.incquery.viewspec.RelationSpec;
 import eu.mondo.mondix.live.IChangeCallback;
-import eu.mondo.mondix.live.ILiveQueryInstance;
+import eu.mondo.mondix.live.ILiveView;
 
 /**
  * @author Bergmann Gabor
@@ -50,8 +50,8 @@ public class MondixBaseIndex implements IBaseIndex {
 	private Logger logger;
 	private IMondixInstance mondixer;
 	
-	private Map<InputSpec, IQueryInstance> openQueryInstances = new HashMap<InputSpec, IQueryInstance>();
-	private Multimap<IQueryInstance, InputSpec> inputSpecForQuery = HashMultimap.create();
+	private Map<InputSpec, IMondixView> openMondixViews = new HashMap<InputSpec, IMondixView>();
+	private Multimap<IMondixView, InputSpec> inputSpecForMondixView = HashMultimap.create();
 	private ArrayList<IPatternMatcherRuntimeContextListener> patternMatcherListeners = new ArrayList<IPatternMatcherRuntimeContextListener>();
 
 	/**
@@ -69,15 +69,15 @@ public class MondixBaseIndex implements IBaseIndex {
 	}
 	
 	public void dispose() {
-		Collection<IQueryInstance> values = openQueryInstances.values();
-		for (IQueryInstance iQueryInstance : values) {
-			if (iQueryInstance instanceof ILiveQueryInstance)
-				((ILiveQueryInstance) iQueryInstance).removeChangeListener(changeListener);
-			iQueryInstance.dispose();
+		Collection<IMondixView> values = openMondixViews.values();
+		for (IMondixView mondixView : values) {
+			if (mondixView instanceof ILiveView)
+				((ILiveView) mondixView).removeChangeListener(changeListener);
+			mondixView.dispose();
 		}
 		patternMatcherListeners = null;
-		openQueryInstances = null;
-		inputSpecForQuery = null;
+		openMondixViews = null;
+		inputSpecForMondixView = null;
 		this.mondixer = null;		
 	}
 
@@ -86,9 +86,9 @@ public class MondixBaseIndex implements IBaseIndex {
 	}
 
 	
-	public IQueryInstance toQueryInstance(InputSpec typeObject) {
-		IQueryInstance iQueryInstance = openQueryInstances.get(typeObject);
-		if (iQueryInstance == null) {
+	public IMondixView toView(InputSpec typeObject) {
+		IMondixView mondixView = openMondixViews.get(typeObject);
+		if (mondixView == null) {
 			// TODO add ViewSpec
 			final RelationSpec spec = (RelationSpec)typeObject;
 			final String relationName = spec.getRelationName();
@@ -99,17 +99,17 @@ public class MondixBaseIndex implements IBaseIndex {
 			if (relation.getColumns().size() != spec.getArity())
 				throw new IllegalArgumentException("Expected " + spec + " found instead arity: " + spec.getArity());
 			
-			iQueryInstance = relation.openQueryInstance();
-			openQueryInstances.put(typeObject, iQueryInstance);
-			inputSpecForQuery.put(iQueryInstance, typeObject);
+			mondixView = relation.openView();
+			openMondixViews.put(typeObject, mondixView);
+			inputSpecForMondixView.put(mondixView, typeObject);
 			
-			if (iQueryInstance instanceof ILiveQueryInstance)
-				((ILiveQueryInstance) iQueryInstance).addChangeListener(changeListener);
+			if (mondixView instanceof ILiveView)
+				((ILiveView) mondixView).addChangeListener(changeListener);
 		}
-		return iQueryInstance;
+		return mondixView;
 	}
-	public ILiveQueryInstance toLiveQueryInstance(InputSpec typeObject) {
-		return (ILiveQueryInstance) toQueryInstance(typeObject);
+	public ILiveView toLiveView(InputSpec typeObject) {
+		return (ILiveView) toView(typeObject);
 	}
 	
 
@@ -187,9 +187,9 @@ public class MondixBaseIndex implements IBaseIndex {
 	class MondixChangeListener implements IChangeCallback {
 
 		@Override
-		public void changed(ILiveQueryInstance query, boolean inserted, List<?> changedTuple) {
+		public void changed(ILiveView view, boolean inserted, List<?> changedTuple) {
 			for (IPatternMatcherRuntimeContextListener listener : patternMatcherListeners) {
-				for (InputSpec typeKey : inputSpecForQuery.get(query)) {
+				for (InputSpec typeKey : inputSpecForMondixView.get(view)) {
 					if (changedTuple.size() == 1)
 						listener.updateUnary(inserted, changedTuple.get(0), typeKey);
 					else if (changedTuple.size() == 2)

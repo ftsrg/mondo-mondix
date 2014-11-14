@@ -16,66 +16,66 @@ public class ChangeAwareMondixRelation<Row extends AbstractRow> extends DefaultM
 	/**
 	 * Store live instances to notify them from changes.
 	 */
-	Set<LiveQueryInstance<Row>> liveQueryInstances;
+	Set<LiveView<Row>> liveViews;
 	
 	public ChangeAwareMondixRelation(IMondixInstance mondixInstance, String name, List<String> columns, Set<Row> data) {
 		super(mondixInstance, name, columns, data);
-		liveQueryInstances = new HashSet<LiveQueryInstance<Row>>();
+		liveViews = new HashSet<LiveView<Row>>();
 	}
 	
 	@Override
-	public LiveQueryInstance<Row> openQueryInstance() {
-		LiveQueryInstance<Row> liveQueryInstance;
+	public LiveView<Row> openView() {
+		LiveView<Row> liveView;
 		if (getArity() == 1)
-			liveQueryInstance = new LiveUnaryQueryInstance<Row>(this, rows);
+			liveView = new LiveUnaryView<Row>(this, rows);
 		else if (getArity() == 0)
-			liveQueryInstance = new LiveNullaryQueryInstance<Row>(this, rows);
+			liveView = new LiveNullaryView<Row>(this, rows);
 		else 
-			liveQueryInstance = new LiveQueryInstance<Row>(this, rows);
-		liveQueryInstances.add(liveQueryInstance);
-		return liveQueryInstance;
+			liveView = new LiveView<Row>(this, rows);
+		liveViews.add(liveView);
+		return liveView;
 	}
 	
 	@Override
-	public LiveQueryInstance<Row> openQueryInstance(List<String> selectedColumnNames, Map<String, Object> filter) {
-		LiveQueryInstance<Row> liveQueryInstance;
+	public LiveView<Row> openView(List<String> selectedColumnNames, Map<String, Object> filter) {
+		LiveView<Row> liveView;
 		if (selectedColumnNames.size() == 1)
-			liveQueryInstance = new LiveUnaryQueryInstance<Row>(this, rows, selectedColumnNames, filter);
+			liveView = new LiveUnaryView<Row>(this, rows, selectedColumnNames, filter);
 		else if (selectedColumnNames.size() == 0)
-			liveQueryInstance = new LiveNullaryQueryInstance<Row>(this, rows, selectedColumnNames, filter);
+			liveView = new LiveNullaryView<Row>(this, rows, selectedColumnNames, filter);
 		else 
-			liveQueryInstance = new LiveQueryInstance<Row>(this, rows, selectedColumnNames, filter);
-		liveQueryInstances.add(liveQueryInstance);
-		return liveQueryInstance;
+			liveView = new LiveView<Row>(this, rows, selectedColumnNames, filter);
+		liveViews.add(liveView);
+		return liveView;
 	}
 	
 	/**
-	 * Forward changes to query instances.
+	 * Forward changes to views.
 	 * @param row added tuple
 	 */
 	public void addRow(Row row) {
 		rows.add(row);
-		for(LiveQueryInstance<Row> liveQueryInstance : liveQueryInstances) {
-			liveQueryInstance.addRow(row);
+		for(LiveView<Row> liveView : liveViews) {
+			liveView.addRow(row);
 		}
 	}
 	
 	/**
-	 * Forward changes to query instances.
+	 * Forward changes to views.
 	 * @param row removed tuple
 	 */
 	public void removeRow(Row row) {
 		rows.remove(row);
-		for(LiveQueryInstance<Row> liveQueryInstance : liveQueryInstances) {
-			liveQueryInstance.removeRow(row);
+		for(LiveView<Row> liveView : liveViews) {
+			liveView.removeRow(row);
 		}
 	}
 	
 	/**
-	 * Terminate notificating the given queryinstance.
-	 * @param liveQueryInstance
+	 * Terminate notificating the given view.
+	 * @param liveView
 	 */
-	public void removeLiveQueryInstance(LiveQueryInstance<Row> liveQueryInstance) {
-		liveQueryInstances.remove(liveQueryInstance);
+	public void removeLiveView(LiveView<Row> liveView) {
+		liveViews.remove(liveView);
 	}
 }

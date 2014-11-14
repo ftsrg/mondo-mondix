@@ -18,13 +18,13 @@ import eu.mondo.mondix.core.IMondixRelation;
 
 /**
  * Change-aware guarantees to the Mondix relation concept.
- * <p> query instances are live queries.
+ * <p> mondix views are live queries.
  * @author Bergmann Gabor
  *
  */
 public interface IChangeAwareMondixRelation extends IMondixRelation {
 	@Override
-	public ILiveQueryInstance openQueryInstance();
+	public ILiveView openView();
 	@Override
-	public ILiveQueryInstance openQueryInstance(List<String> selectedColumnNames, Map<String, Object> filter);
+	public ILiveView openView(List<String> selectedColumnNames, Map<String, Object> filter);
 }

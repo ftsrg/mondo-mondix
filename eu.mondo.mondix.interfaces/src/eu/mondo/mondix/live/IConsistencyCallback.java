@@ -26,7 +26,7 @@ public interface IConsistencyCallback {
 	 *  that is equivalent to the delta between the current consistent state and the previous one. 
 	 *  <li> If the model has changed since the previous consistency callback 
 	 *   in a way to influence the result of 
-	 *   	any open {@link ILiveQueryInstance} with {@link IChangeCallback} listeners attached,
+	 *   	any open {@link ILiveView} with {@link IChangeCallback} listeners attached,
 	 *   this consistency callback is guaranteed to be called eventually.
 	 *  <li> Changing the model is permitted during this callback, though it may lead to an inconsistent state again.
 	 * </ul> 

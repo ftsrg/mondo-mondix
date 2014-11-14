@@ -53,10 +53,10 @@ public interface IMondixInstance {
 	public IMondixRelation getCatalogRelation();
 	
 	/**
-	 * Returns a query into the catalog relation that lists the names of all relations published by this mondix instance.
-	 * <p> Equivalent to calling {@link #getCatalogRelation()} and opening a query instance that selects the column "name" only.
+	 * Returns a view of the catalog relation that lists the names of all relations published by this mondix instance.
+	 * <p> Equivalent to calling {@link #getCatalogRelation()} and opening a mondix view that selects the column "name" only.
 	 * 
 	 */
-	public IUnaryQueryInstance getPublishedRelationNames();	
+	public IUnaryView getPublishedRelationNames();	
 
 }

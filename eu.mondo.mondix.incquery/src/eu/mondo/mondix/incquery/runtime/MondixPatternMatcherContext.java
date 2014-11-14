@@ -49,7 +49,7 @@ public class MondixPatternMatcherContext implements IPatternMatcherContext {
 	}
 	@Override
 	public boolean isTernaryEdgeType(Object typeObject) {
-		return false; // toQueryInstance(typeObject).getSelectedColumnNames().size() == 3;
+		return false; // toView(typeObject).getSelectedColumnNames().size() == 3;
 	}
 	
 	@Override

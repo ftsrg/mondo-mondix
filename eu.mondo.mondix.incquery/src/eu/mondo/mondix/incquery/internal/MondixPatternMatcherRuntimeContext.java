@@ -20,7 +20,7 @@ import org.eclipse.incquery.runtime.api.IncQueryEngine;
 import org.eclipse.incquery.runtime.matchers.context.IPatternMatcherRuntimeContext;
 import org.eclipse.incquery.runtime.matchers.context.IPatternMatcherRuntimeContextListener;
 
-import eu.mondo.mondix.core.IQueryInstance;
+import eu.mondo.mondix.core.IMondixView;
 import eu.mondo.mondix.incquery.runtime.MondixPatternMatcherContext;
 import eu.mondo.mondix.incquery.viewspec.InputSpec;
 
@@ -49,8 +49,8 @@ public class MondixPatternMatcherRuntimeContext extends MondixPatternMatcherCont
 		logger = null;
 	}
 
-	protected IQueryInstance toQueryInstance(Object typeObject) {
-		return baseIndex.toQueryInstance((InputSpec) typeObject);
+	protected IMondixView toView(Object typeObject) {
+		return baseIndex.toView((InputSpec) typeObject);
 	}
 	
 	
@@ -94,8 +94,8 @@ public class MondixPatternMatcherRuntimeContext extends MondixPatternMatcherCont
 	@Override
 	public void enumerateDirectUnaryInstances(Object typeObject,
 			ModelElementCrawler crawler) {
-		IQueryInstance queryInstance = toQueryInstance(typeObject);
-		for (List<?> tuple : queryInstance.getAllTuples()) {
+		IMondixView mondixView = toView(typeObject);
+		for (List<?> tuple : mondixView.getAllTuples()) {
 			crawler.crawl(tuple.get(0));
 		}
 	}
@@ -110,8 +110,8 @@ public class MondixPatternMatcherRuntimeContext extends MondixPatternMatcherCont
 	@Override
 	public void enumerateDirectBinaryEdgeInstances(Object typeObject,
 			ModelElementPairCrawler crawler) {
-		IQueryInstance queryInstance = toQueryInstance(typeObject);
-		for (List<?> tuple : queryInstance.getAllTuples()) {
+		IMondixView mondixView = toView(typeObject);
+		for (List<?> tuple : mondixView.getAllTuples()) {
 			crawler.crawl(tuple.get(0), tuple.get(1));
 		}
 	}

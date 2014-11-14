@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.Set;
 
 import eu.mondo.mondix.implementation.hashmap.AbstractRow;
-import eu.mondo.mondix.implementation.hashmap.MondixQueryInstance;
+import eu.mondo.mondix.implementation.hashmap.MondixView;
 import eu.mondo.mondix.live.IChangeAwareMondixRelation;
 import eu.mondo.mondix.live.IChangeCallback;
-import eu.mondo.mondix.live.ILiveQueryInstance;
+import eu.mondo.mondix.live.ILiveView;
 
-public class LiveQueryInstance<Row extends AbstractRow> extends MondixQueryInstance<Row> implements ILiveQueryInstance {
+public class LiveView<Row extends AbstractRow> extends MondixView<Row> implements ILiveView {
 	
 	/**
 	 * Change-aware mondix relations that will be notified from changes.
@@ -24,13 +24,13 @@ public class LiveQueryInstance<Row extends AbstractRow> extends MondixQueryInsta
 	 */
 	protected Set<IChangeCallback> changeCallbacks;
 	
-	public LiveQueryInstance(ChangeAwareMondixRelation<Row> changeAwaremondixRelation, Set<Row> rows) {
+	public LiveView(ChangeAwareMondixRelation<Row> changeAwaremondixRelation, Set<Row> rows) {
 		super(changeAwaremondixRelation, rows);
 		this.changeAwaremondixRelation = changeAwaremondixRelation;
 		this.changeCallbacks = new HashSet<IChangeCallback>();
 	}
 	
-	public LiveQueryInstance(ChangeAwareMondixRelation<Row> changeAwaremondixRelation, Set<Row> rows,
+	public LiveView(ChangeAwareMondixRelation<Row> changeAwaremondixRelation, Set<Row> rows,
 			List<String> selectedColumnNames, Map<String, Object> filter) {
 		super(changeAwaremondixRelation, rows, selectedColumnNames, filter);
 		this.changeAwaremondixRelation = changeAwaremondixRelation;
@@ -96,11 +96,11 @@ public class LiveQueryInstance<Row extends AbstractRow> extends MondixQueryInsta
 	}
 	
 	/**
-	 * Unregister query instance from parent relation.
+	 * Unregister view from parent relation.
 	 */
 	@Override
 	public void dispose() {
-		changeAwaremondixRelation.removeLiveQueryInstance(this);
+		changeAwaremondixRelation.removeLiveView(this);
 	}
 	
 }

@@ -13,19 +13,19 @@ package eu.mondo.mondix.live;
 
 
 /**
- * A callback interface for an {@link ILiveQueryInstanceDirect} to deliver information about query result changes.
+ * A callback interface for an {@link ILiveViewDirect} to deliver information about query result changes.
  * Similar to {@link IChangeCallback}, but allows a direct access to the indexer's internal tuple representation.
  * 
  * @author Bergmann Gabor
  */
 public interface IChangeCallbackDirect<Row> {
 	/**
-	 * Called upon each elementary change to the live query's results.
+	 * Called upon each elementary change to the live view's results.
 	 * @param inserted true if tuple was inserted, false if it was removed
 	 * 
 	 * <p> WARNING: model MUST NOT be accessed within the callback. 
 	 * <p> WARNING: consistency of query results not guaranteed at callback time. 
 	 */
-	public void changed(ILiveQueryInstanceDirect<Row> query, boolean inserted, Row changedTuple);
+	public void changed(ILiveViewDirect<Row> view, boolean inserted, Row changedTuple);
 
 }

@@ -11,8 +11,8 @@ import com.google.common.collect.ImmutableMap;
 
 import eu.mondo.mondix.core.IMondixInstance;
 import eu.mondo.mondix.core.IMondixRelation;
-import eu.mondo.mondix.core.IQueryInstance;
-import eu.mondo.mondix.core.IUnaryQueryInstance;
+import eu.mondo.mondix.core.IMondixView;
+import eu.mondo.mondix.core.IUnaryView;
 import eu.mondo.mondix.implementation.hashmap.live.ChangeAwareMondixRelation;
 
 /**
@@ -105,10 +105,10 @@ public class MondixInstance<Row extends AbstractRow> implements IMondixInstance 
 	}
 	
 	@Override
-	public IUnaryQueryInstance getPublishedRelationNames() {
+	public IUnaryView getPublishedRelationNames() {
 		IMondixRelation catalogRelation = getCatalogRelation();
 		// This catalog contains one attribute, in other case selectedColumnNames parameter can be used with empty filter.
-		IQueryInstance queryInstance = catalogRelation.openQueryInstance();
-		return (IUnaryQueryInstance) queryInstance;
+		IMondixView mondixView = catalogRelation.openView();
+		return (IUnaryView) mondixView;
 	}
 }

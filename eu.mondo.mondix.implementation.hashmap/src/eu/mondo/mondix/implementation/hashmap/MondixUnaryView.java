@@ -6,17 +6,17 @@ import java.util.Map;
 import java.util.Set;
 
 import eu.mondo.mondix.core.IMondixRelation;
-import eu.mondo.mondix.core.IUnaryQueryInstance;
+import eu.mondo.mondix.core.IUnaryView;
 
 // TODO pre-cache getValues() ?
-public class MondixUnaryQueryInstance<Row extends AbstractRow> extends
-		MondixQueryInstance<Row> implements IUnaryQueryInstance {
+public class MondixUnaryView<Row extends AbstractRow> extends
+		MondixView<Row> implements IUnaryView {
 
-	public MondixUnaryQueryInstance(IMondixRelation mondixRelation,	Set<Row> rows) {
+	public MondixUnaryView(IMondixRelation mondixRelation,	Set<Row> rows) {
 		super(mondixRelation, rows);
 	}
 
-	public MondixUnaryQueryInstance(IMondixRelation mondixRelation, Set<Row> rows,
+	public MondixUnaryView(IMondixRelation mondixRelation, Set<Row> rows,
 			List<String> selectedColumnNames, Map<String, Object> filter) {
 		super(mondixRelation, rows, selectedColumnNames, filter);
 	}

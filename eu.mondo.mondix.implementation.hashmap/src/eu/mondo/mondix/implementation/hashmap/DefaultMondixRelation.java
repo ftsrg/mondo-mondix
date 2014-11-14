@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import eu.mondo.mondix.core.IMondixInstance;
-import eu.mondo.mondix.core.IQueryInstance;
+import eu.mondo.mondix.core.IMondixView;
 
 /**
  * 
@@ -34,21 +34,21 @@ public class DefaultMondixRelation<Row extends AbstractRow> extends AbstractRela
 	}
 
 	@Override
-	public IQueryInstance openQueryInstance() {
+	public IMondixView openView() {
 		if (getArity() == 1)
-			return new MondixUnaryQueryInstance<Row>(this, rows);
+			return new MondixUnaryView<Row>(this, rows);
 		else if (getArity() == 0)
-			return new MondixNullaryQueryInstance<Row>(this, rows);
-		return new MondixQueryInstance<Row>(this, rows);
+			return new MondixNullaryView<Row>(this, rows);
+		return new MondixView<Row>(this, rows);
 	}
 
 	@Override
-	public IQueryInstance openQueryInstance(List<String> selectedColumnNames, Map<String, Object> filter) {
+	public IMondixView openView(List<String> selectedColumnNames, Map<String, Object> filter) {
 		if (selectedColumnNames.size() == 1)
-			return new MondixUnaryQueryInstance<Row>(this, rows, selectedColumnNames, filter);
+			return new MondixUnaryView<Row>(this, rows, selectedColumnNames, filter);
 		else if (selectedColumnNames.size() == 0)
-			return new MondixNullaryQueryInstance<Row>(this, rows, selectedColumnNames, filter);
-		return new MondixQueryInstance<Row>(this, rows, selectedColumnNames, filter);
+			return new MondixNullaryView<Row>(this, rows, selectedColumnNames, filter);
+		return new MondixView<Row>(this, rows, selectedColumnNames, filter);
 	}
 
 }

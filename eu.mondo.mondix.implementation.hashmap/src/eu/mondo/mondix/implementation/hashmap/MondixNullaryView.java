@@ -6,16 +6,16 @@ import java.util.Map;
 import java.util.Set;
 
 import eu.mondo.mondix.core.IMondixRelation;
-import eu.mondo.mondix.core.INullaryQueryInstance;
+import eu.mondo.mondix.core.INullaryView;
 
-public class MondixNullaryQueryInstance<Row extends AbstractRow> extends
-		MondixQueryInstance<Row> implements INullaryQueryInstance {
+public class MondixNullaryView<Row extends AbstractRow> extends
+		MondixView<Row> implements INullaryView {
 
-	public MondixNullaryQueryInstance(IMondixRelation mondixRelation, Set<Row> rows) {
+	public MondixNullaryView(IMondixRelation mondixRelation, Set<Row> rows) {
 		super(mondixRelation, rows);
 	}
 
-	public MondixNullaryQueryInstance(IMondixRelation mondixRelation, Set<Row> rows,
+	public MondixNullaryView(IMondixRelation mondixRelation, Set<Row> rows,
 			List<String> selectedColumnNames, Map<String, Object> filter) {
 		super(mondixRelation, rows, selectedColumnNames, filter);
 	}

@@ -11,21 +11,21 @@
 
 package eu.mondo.mondix.live;
 
-import eu.mondo.mondix.core.IQueryInstance;
+import eu.mondo.mondix.core.IMondixView;
 
 /**
- * A query instance that can deliver live info about its changes through callbacks. 
+ * A mondix view that can deliver live info about its changes through callbacks. 
  * @author Bergmann Gabor
  *
  */
-public interface ILiveQueryInstance extends IQueryInstance {
+public interface ILiveView extends IMondixView {
 	// TODO Unary/Nullary specializations?
 	
 	@Override
 	public IChangeAwareMondixRelation getBaseRelation();
 	/**
 	 * The given listener will be notified of changes from now on. 
-	 * The change listener will have to be removed before disposing the query instance.
+	 * The change listener will have to be removed before disposing the mondix view.
 	 */
 	public void addChangeListener(IChangeCallback changeListener);
 	

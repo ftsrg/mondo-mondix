@@ -9,21 +9,21 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import eu.mondo.mondix.core.IMondixRelation;
-import eu.mondo.mondix.core.IQueryInstance;
+import eu.mondo.mondix.core.IMondixView;
 
 //TODO generalize construction with Set<Row> -->> Iterable<? extends Row> 
 //TODO explain in Javadoc how this constructor parameter may already be prefiltered (e.g. based on another indexer)
-//TODO share index contents between query instances
+//TODO share index contents between views
 //TODO instead of current Row interface, do something along the lines of RowInterpreter, and/or map filter condition to column indices
 
-public class MondixQueryInstance<Row extends AbstractRow> implements IQueryInstance {
+public class MondixView<Row extends AbstractRow> implements IMondixView {
 	
 	protected IMondixRelation mondixRelation;
 	protected Map<String, Object> filter;
 	protected List<String> selectedColumnNames;
 	protected HashSet<List<Object>> tuples;
 	
-	public MondixQueryInstance(IMondixRelation mondixRelation, Set<Row> rows) {
+	public MondixView(IMondixRelation mondixRelation, Set<Row> rows) {
 		this.mondixRelation = mondixRelation;
 		selectedColumnNames = mondixRelation.getColumns();
 		filter = new HashMap<String, Object>();
@@ -40,7 +40,7 @@ public class MondixQueryInstance<Row extends AbstractRow> implements IQueryInsta
 		}
 	}
 	
-	public MondixQueryInstance(IMondixRelation mondixRelation, Set<Row> rows,
+	public MondixView(IMondixRelation mondixRelation, Set<Row> rows,
 			List<String> selectedColumnNames, Map<String, Object> filter) {
 		this.mondixRelation = mondixRelation;
 		this.selectedColumnNames = new ArrayList<String>(selectedColumnNames);

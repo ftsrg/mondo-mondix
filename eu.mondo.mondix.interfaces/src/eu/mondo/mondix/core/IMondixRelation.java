@@ -47,23 +47,23 @@ public interface IMondixRelation {
 	public int getArity();
 	
 	/**
-	 * Returns a query instance against the entire contents of the relation.
+	 * Returns a mondix view against the entire contents of the relation.
 	 * <p> Result should be disposed if no longer used.
-	 * <p> Same as {@link #openQueryInstance(List, Map)} parameterized by (null, null).
+	 * <p> Same as {@link #openView(List, Map)} parameterized by (null, null).
 	 */
-	public IQueryInstance openQueryInstance();
+	public IMondixView openView();
 	/**
-	 * Returns a query instance filtered to the given values that only returns the selected columns.
+	 * Returns a mondix view filtered to the given values that only returns the selected columns.
 	 * <p> Result should be disposed if no longer used.
-	 * <p> Guaranteed to return {@link IUnaryQueryInstance} or {@link INullaryQueryInstance} 
+	 * <p> Guaranteed to return {@link IUnaryView} or {@link INullaryView} 
 	 * 	if 1 respectively 0 columns are selected.
 	 * 
 	 * @param selectedColumnNames the ordered, unique list of columns that should be returned for tuples in this relation (can be empty). 
 	 * 	If null is given, all columns are selected in the original order (see {@link #getColumns()}). 
 	 * @param filter a map from zero or more column names to concrete values. 
-	 *  The query will be filtered to those tuples only that take the given values at the given columns.
+	 *  The view will be filtered to those tuples only that take the given values at the given columns.
 	 *  If null is given, no filtering is done (equivalently to an empty map).
 	 */
-	public IQueryInstance openQueryInstance(List<String> selectedColumnNames, Map<String, Object> filter);
+	public IMondixView openView(List<String> selectedColumnNames, Map<String, Object> filter);
 
 }

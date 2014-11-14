@@ -16,13 +16,13 @@ import com.google.common.collect.ImmutableMap;
 
 import eu.mondo.mondix.core.IMondixInstance;
 import eu.mondo.mondix.core.IMondixRelation;
-import eu.mondo.mondix.core.INullaryQueryInstance;
-import eu.mondo.mondix.core.IQueryInstance;
-import eu.mondo.mondix.core.IUnaryQueryInstance;
+import eu.mondo.mondix.core.IMondixView;
+import eu.mondo.mondix.core.INullaryView;
+import eu.mondo.mondix.core.IUnaryView;
 import eu.mondo.mondix.implementation.hashmap.database.Database;
 import eu.mondo.mondix.live.IChangeAwareMondixInstance;
 import eu.mondo.mondix.live.IChangeAwareMondixRelation;
-import eu.mondo.mondix.live.ILiveQueryInstance;
+import eu.mondo.mondix.live.ILiveView;
 
 public class MondixTest {
 	
@@ -57,7 +57,7 @@ public class MondixTest {
 	
 	@Test
 	public void testPublishedRelations() {
-		IUnaryQueryInstance publishedRelations = mondixInstance.getPublishedRelationNames();
+		IUnaryView publishedRelations = mondixInstance.getPublishedRelationNames();
 		StringBuilder sb = new StringBuilder();
 		for( Object value : publishedRelations.getValues()) {
 			sb.append(value);
@@ -75,13 +75,13 @@ public class MondixTest {
 		System.out.println(arity);
 		assertEquals(1, arity);
 		
-		IQueryInstance queryInstance = ageRelation.openQueryInstance();
-		int coutOfTuples = queryInstance.getCountOfTuples();
+		IMondixView mondixView = ageRelation.openView();
+		int coutOfTuples = mondixView.getCountOfTuples();
 		System.out.println(coutOfTuples);
 		assertEquals(2, coutOfTuples);
 		
 		StringBuilder sb = new StringBuilder();
-		for(List<?> tuple : queryInstance.getAllTuples()) {
+		for(List<?> tuple : mondixView.getAllTuples()) {
 			sb.append(tupleToString(tuple));
 		}
 		System.out.println(sb.toString());
@@ -97,13 +97,13 @@ public class MondixTest {
 		System.out.println(arity);
 		assertEquals(2, arity);
 		
-		IQueryInstance queryInstance = ageRelation.openQueryInstance();
-		int coutOfTuples = queryInstance.getCountOfTuples();
+		IMondixView mondixView = ageRelation.openView();
+		int coutOfTuples = mondixView.getCountOfTuples();
 		System.out.println(coutOfTuples);
 		assertEquals(3, coutOfTuples);
 		
 		StringBuilder sb = new StringBuilder();
-		for(List<?> tuple : queryInstance.getAllTuples()) {
+		for(List<?> tuple : mondixView.getAllTuples()) {
 			sb.append(tupleToString(tuple));
 		}
 		System.out.println(sb.toString());
@@ -118,13 +118,13 @@ public class MondixTest {
 		HashMap<String, Object> filter = new HashMap<String, Object>();
 		filter.put("name", null);
 		filter.put("year", 26);
-		IQueryInstance queryInstanceFiltered = ageRelation.openQueryInstance(selectedColumnNames, filter);
-		int coutOfTuplesFiltered = queryInstanceFiltered.getCountOfTuples();
+		IMondixView viewFiltered = ageRelation.openView(selectedColumnNames, filter);
+		int coutOfTuplesFiltered = viewFiltered.getCountOfTuples();
 		System.out.println(coutOfTuplesFiltered);
 		assertEquals(2, coutOfTuplesFiltered);
 		
 		StringBuilder sbFiltered = new StringBuilder();
-		for(List<?> tuple : queryInstanceFiltered.getAllTuples()) {
+		for(List<?> tuple : viewFiltered.getAllTuples()) {
 			sbFiltered.append(tupleToString(tuple));
 		}
 		System.out.println(sbFiltered.toString());
@@ -138,9 +138,9 @@ public class MondixTest {
 			    .put("name", "Jacob").put("year", 29).build();
 		ages.add(age4);
 		IMondixRelation ageRelation4 = mondixInstance.getBaseRelationByName("age");
-		IQueryInstance queryInstance4 = ageRelation4.openQueryInstance();
-		System.out.println(queryInstance4.getCountOfTuples());
-		assertEquals(3, queryInstance4.getCountOfTuples());
+		IMondixView view4 = ageRelation4.openView();
+		System.out.println(view4.getCountOfTuples());
+		assertEquals(3, view4.getCountOfTuples());
 	}
 	
 	private String tupleToString(List<?> tuple) {
@@ -179,8 +179,8 @@ public class MondixTest {
 		
 		StringBuilder sb = new StringBuilder();
 		IMondixRelation unaryBikeRelation = mondixInstance.getBaseRelationByName("bike");
-		IUnaryQueryInstance unaryBikeQueryInstance = (IUnaryQueryInstance) unaryBikeRelation.openQueryInstance();
-		for(Object value : unaryBikeQueryInstance.getValues()) {
+		IUnaryView unaryBikeView = (IUnaryView) unaryBikeRelation.openView();
+		for(Object value : unaryBikeView.getValues()) {
 			sb.append(value.toString()).append('\n');
 		}
 		System.out.println(sb);
@@ -206,14 +206,14 @@ public class MondixTest {
 		IMondixInstance mondixInstance = unaryDB.getMondixInstance();
 		
 		IMondixRelation nullaryExistsRelation = mondixInstance.getBaseRelationByName("exists");
-		INullaryQueryInstance nullaryExistsQueryInstance = (INullaryQueryInstance) nullaryExistsRelation.openQueryInstance();
-		System.out.println(nullaryExistsQueryInstance.isTrue());
-		assertTrue(nullaryExistsQueryInstance.isTrue());
+		INullaryView nullaryExistsView = (INullaryView) nullaryExistsRelation.openView();
+		System.out.println(nullaryExistsView.isTrue());
+		assertTrue(nullaryExistsView.isTrue());
 		
 		IMondixRelation nullaryExistsRelationF = mondixInstance.getBaseRelationByName("notExists");
-		INullaryQueryInstance nullaryExistsQueryInstanceF = (INullaryQueryInstance) nullaryExistsRelationF.openQueryInstance();
-		System.out.println(nullaryExistsQueryInstanceF.isTrue());
-		assertFalse(nullaryExistsQueryInstanceF.isTrue());
+		INullaryView nullaryExistsViewF = (INullaryView) nullaryExistsRelationF.openView();
+		System.out.println(nullaryExistsViewF.isTrue());
+		assertFalse(nullaryExistsViewF.isTrue());
     }
 	
 	private IChangeAwareMondixInstance setupChangeAwareMI() throws Exception {
@@ -241,15 +241,15 @@ public class MondixTest {
 	public void live() throws Exception {
 		IChangeAwareMondixInstance changeAwareMondixInstance = setupChangeAwareMI();
 		IChangeAwareMondixRelation liveAgeRelation = (IChangeAwareMondixRelation) changeAwareMondixInstance.getBaseRelationByName("age");
-		ILiveQueryInstance liveQueryInstance = liveAgeRelation.openQueryInstance();
+		ILiveView liveView = liveAgeRelation.openView();
 		
-		int coutOfTuples = liveQueryInstance.getCountOfTuples();
+		int coutOfTuples = liveView.getCountOfTuples();
 		System.out.println(coutOfTuples);
 		assertEquals(3, coutOfTuples);
 		
 		// basic live query is initialized
 		StringBuilder sb = new StringBuilder();
-		for(List<?> tuple : liveQueryInstance.getAllTuples()) {
+		for(List<?> tuple : liveView.getAllTuples()) {
 			sb.append(tupleToString(tuple));
 		}
 		System.out.println(sb.toString());
@@ -262,7 +262,7 @@ public class MondixTest {
 			    .put("name", "Jenny").put("year", 26).build();
 		db.addRow("age", age4);
 		
-		int coutOfTuples2 = liveQueryInstance.getCountOfTuples();
+		int coutOfTuples2 = liveView.getCountOfTuples();
 		System.out.println(coutOfTuples2);
 		assertEquals(4, coutOfTuples2);
 		
@@ -273,9 +273,9 @@ public class MondixTest {
 		HashMap<String, Object> filter = new HashMap<String, Object>();
 		filter.put("name", null);
 		filter.put("year", 26);
-		ILiveQueryInstance liveQueryInstanceFiltered = liveAgeRelation.openQueryInstance(selectedColumnNames, filter);
+		ILiveView liveViewFiltered = liveAgeRelation.openView(selectedColumnNames, filter);
 		StringBuilder sbFiltered = new StringBuilder();
-		for(List<?> tuple : liveQueryInstanceFiltered.getAllTuples()) {
+		for(List<?> tuple : liveViewFiltered.getAllTuples()) {
 			sbFiltered.append(tupleToString(tuple));
 		}
 		System.out.println(sbFiltered.toString());
@@ -289,7 +289,7 @@ public class MondixTest {
 			    .put("name", "Johanna").put("year", 26).build();
 		db.addRow("age", age5);
 		StringBuilder sbFiltered2 = new StringBuilder();
-		for(List<?> tuple : liveQueryInstanceFiltered.getAllTuples()) {
+		for(List<?> tuple : liveViewFiltered.getAllTuples()) {
 			sbFiltered2.append(tupleToString(tuple));
 		}
 		System.out.println(sbFiltered2.toString());
@@ -302,7 +302,7 @@ public class MondixTest {
 			    .put("name", "Joe").put("year", 35).build();
 		db.addRow("age", age6);
 		StringBuilder sbFiltered3 = new StringBuilder();
-		for(List<?> tuple : liveQueryInstanceFiltered.getAllTuples()) {
+		for(List<?> tuple : liveViewFiltered.getAllTuples()) {
 			sbFiltered3.append(tupleToString(tuple));
 		}
 		System.out.println(sbFiltered3.toString());
@@ -313,7 +313,7 @@ public class MondixTest {
 
 		// but the "filtered" data must show up as a result of a non-filtered query result in the same relation
 		StringBuilder sbNotFiltered4 = new StringBuilder();
-		for(List<?> tuple : liveQueryInstance.getAllTuples()) {
+		for(List<?> tuple : liveView.getAllTuples()) {
 			sbNotFiltered4.append(tupleToString(tuple));
 		}
 		System.out.println(sbNotFiltered4.toString());
@@ -324,7 +324,7 @@ public class MondixTest {
 		
 		// test getting change callbacks and consistency callbacks
 		MyChangeCallback changeCallback = new MyChangeCallback();
-		liveQueryInstance.addChangeListener(changeCallback);
+		liveView.addChangeListener(changeCallback);
 		MyConsistencyCallback consistencyCallback = new MyConsistencyCallback();
 		changeAwareMondixInstance.addConsistencyListener(consistencyCallback);
 		ImmutableMap<String, Object> age7 = ImmutableMap.<String, Object>builder()
@@ -339,7 +339,7 @@ public class MondixTest {
 		
 		// test whether Johanna is deleted from the filtered results, as the callback says
 		StringBuilder sbFiltered4 = new StringBuilder();
-		for(List<?> tuple : liveQueryInstanceFiltered.getAllTuples()) {
+		for(List<?> tuple : liveViewFiltered.getAllTuples()) {
 			sbFiltered4.append(tupleToString(tuple));
 		}
 		System.out.println(sbFiltered4.toString());

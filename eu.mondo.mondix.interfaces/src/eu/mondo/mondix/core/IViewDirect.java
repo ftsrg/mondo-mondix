@@ -12,17 +12,17 @@
 package eu.mondo.mondix.core;
 
 /**
- * A specialized version of {@link IQueryInstance} that offers direct access to the internal memory representation of the indexer to 
+ * A specialized version of {@link IMondixView} that offers direct access to the internal memory representation of the indexer to 
  *   avoid copying result tuples into the standard format. This may provide better performance if the indexer is accessed locally. 
  * 
  * @author Bergmann Gabor
- * @param <Row> the class that represents a tuple/row of the query results. 
+ * @param <Row> the class that represents a tuple/row of the view contents. 
  *   Can be any POJO - clients should extract values using the provided tuple interpreter. 
  *
  */
-public interface IQueryInstanceDirect<Row> extends IQueryInstance {
+public interface IViewDirect<Row> extends IMondixView {
 	/**
-	 * Core functionality: returns all tuples formed by selected columns of the base relation that are in the result set of this (filtered) query instance.
+	 * Core functionality: returns all tuples formed by selected columns of the base relation that are in the result set of this (filtered) mondix view.
 	 * <p> Each tuple will be returned in the native tuple/row format of the indexer. 
 	 * <p> Invoking this method avoids copying the results into the standard list format. 
 	 */
@@ -34,11 +34,11 @@ public interface IQueryInstanceDirect<Row> extends IQueryInstance {
 	public RowInterpreter<Row> getRowInterpreter();
 	
 	/**
-	 * An adapter object to interpret the internal row representation of a {@link IQueryInstanceDirect}.
+	 * An adapter object to interpret the internal row representation of a {@link IViewDirect}.
 	 * 
 	 * @author Bergmann Gabor
 	 *
-	 * @param <Row> the class that represents a tuple/row of the query results. 
+	 * @param <Row> the class that represents a tuple/row of the view contents. 
 	 *   Can be any POJO - clients should extract values using the provided tuple interpreter. 
 	 */
 	public static interface RowInterpreter<Row> {

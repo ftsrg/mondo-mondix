@@ -11,18 +11,19 @@
 
 package eu.mondo.mondix.core;
 
+
 /**
- * Special case of {@link IQueryInstance} where the number of selected columns is known to be 0.
+ * Special case of {@link IMondixView} where the number of selected columns is known to be 1.
  * 
  * 
  * @author Bergmann Gabor
  *
  */
-public interface INullaryQueryInstance extends IQueryInstance {
+public interface IUnaryView extends IMondixView {
 	
 	/**
-	 * Core functionality: returns true iff the filter matches the base relation.
+	 * Core functionality: returns all values of the single selected column of this (filtered) mondix view.
 	 */
-	public boolean isTrue();
+	public Iterable<? extends Object> getValues();
 
 }
