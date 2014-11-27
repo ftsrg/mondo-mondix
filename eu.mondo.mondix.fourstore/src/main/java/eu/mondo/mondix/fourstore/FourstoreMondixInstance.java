@@ -2,7 +2,7 @@ package eu.mondo.mondix.fourstore;
 
 import eu.mondo.mondix.core.IMondixInstance;
 import eu.mondo.mondix.core.IMondixRelation;
-import eu.mondo.mondix.core.IUnaryQueryInstance;
+import eu.mondo.mondix.core.IUnaryView;
 
 public class FourstoreMondixInstance implements IMondixInstance {
 
@@ -16,7 +16,7 @@ public class FourstoreMondixInstance implements IMondixInstance {
 		return null;
 	}
 
-	public IUnaryQueryInstance getPublishedRelationNames() {
+	public IUnaryView getPublishedRelationNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}
