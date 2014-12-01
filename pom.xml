@@ -42,7 +42,8 @@
 	</build>
 	
 	<modules>
-		<module>eu.mondo.mondix.fourstore</module>
 		<module>eu.mondo.mondix.interfaces</module>
+		<module>eu.mondo.mondix.fourstore</module>
+		<module>eu.mondo.mondix.incquery</module>
 	</modules>
 </project>
