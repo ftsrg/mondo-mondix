@@ -38,12 +38,46 @@
 					<argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</argLine>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<pomDependencies>consider</pomDependencies>
+					<target>
+						<artifact>
+							<groupId>eu.mondo.mondix</groupId>
+							<artifactId>eu.mondo.mondix.incquery</artifactId>
+							<version>1.0.0-SNAPSHOT</version>
+						</artifact>
+					</target>
+					<environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	
 	<modules>
 		<module>eu.mondo.mondix.interfaces</module>
 		<module>eu.mondo.mondix.fourstore</module>
+	  <module>eu.mondo.mondix.implementation.hashmap</module>
 		<module>eu.mondo.mondix.incquery</module>
+		<module>eu.mondo.mondix.incquery.test</module>
 	</modules>
 </project>
