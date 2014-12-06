@@ -1,5 +1,4 @@
-Mondix – the MONDO Indexer
-==========================
+#Mondix – the MONDO Indexer
 
 ##Key notions of mondix 
 
@@ -51,10 +50,10 @@ A meaningful modification of the indexed model may involve more than one row-lev
 
 ##Contents 
 
-* *eu.mondo.mondix.interfaces*: the mondix interfaces themselves
+* `eu.mondo.mondix.interfaces`: the mondix interfaces themselves
   - still a draft version 
   - core interfaces and change-aware extensions available currently 
-* *eu.mondo.mondix.implementation.hashmap*: a simple default implementation that serves sets of in-memory rows as mondix relations
+* `eu.mondo.mondix.implementation.hashmap`: a simple default implementation that serves sets of in-memory rows as mondix relations
   - one can copy some data source into this relation, and it will be served via mondix 
   - change-aware parts not very well-done yet 
   - not very extensible yet 
@@ -67,18 +66,12 @@ A meaningful modification of the indexed model may involve more than one row-lev
     * Allow „roll your own” *base relation* implementations 
       - May be based on e.g. an RDF store, Hawk, etc.    
       - Makes use of library for projections, lookup tables, etc.    
-* *eu.mondo.mondix.client*: basically a JUnit test case for the „hashmap” mondixer
+* `eu.mondo.mondix.client`: basically a JUnit test case for the „hashmap” mondixer
     - misleading name: this is not a mondix client library 
-* *eu.mondo.mondix.fourstore*: empty placeholder project for a 4store-backed mondixer
-* *eu.mondo.mondix.incquery*: runtime component of mondix bindings for IncQuery 
+* `eu.mondo.mondix.fourstore`: empty placeholder project for a 4store-backed mondixer
+* `eu.mondo.mondix.incquery`: runtime component of mondix bindings for IncQuery 
   - enables IncQuery as a mondix client, providing complex query capabilities on top of mondix
   - very early draft version
   - can formulate and evaluate queries over mondix relations via IncQuery
-  - requires the api-refactor0.9 branch of IncQuery 
-* *eu.mondo.mondix.incquery.test*: JUnit test for the IncQuery binding
-
-    
-    
-
-
- 
+  - requires the `api-refactor0.9` branch of IncQuery 
+* `eu.mondo.mondix.incquery.test`: JUnit test for the IncQuery binding
