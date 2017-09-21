@@ -1,6 +1,6 @@
-#Mondix – the MONDO Indexer
+# Mondix – the MONDO Indexer
 
-##Key notions of mondix 
+## Key notions of mondix 
 
 The **mondix** API is a **uniform interface** for publishing knowledge in a **read-only** way. 
 
@@ -8,7 +8,7 @@ The mondix interface is intended to be implemented by **model indexers** and oth
 
 The mondix interface is intended to be used by **mondix clients** that extract and process knowledge published by mondixers; a typical mondix client could be a **complex model query engine** that performs computations and provides results to users based on information (such as knowledge about models) provided by one or more mondixers.
 
-##Overview of data model and operations of mondix
+## Overview of data model and operations of mondix
 
 A mondixer publishes knowledge in a **relational format**, as a set of named **base relations**. The names of published relations is exposed through a special **catalog relation** (with an empty string for name). Each base relation defines an ordered list of named columns. A base relation is conceptually said to contain rows, each of which is a tuple containing a value for each column of the relation. 
 
@@ -16,7 +16,7 @@ The client can open **relational views** from a base relation. A view indicates 
 
 Having specified views, the client can invoke at least two **query operations** to actually obtain results: retrieving all (filtered, projected) rows of the view, and counting the number of such rows (without enumerating them all).
  
-##Guarantees and responsibilities 
+## Guarantees and responsibilities 
 
 **Mondixers publish knowledge** through the mondix API. Thus they are the components responsible for the **comprehension & uniformization** of some data source. In a scalable model management context, there may be many model repositories avaliable with heterogenous model representations, so it is the responsibility of the mondixer to expose all this knowledge through a single API, so that the complex query engine can treat model uniformly. This might require a conceptual transformation of the data, such as ORM (Object-Relational Mapping).
 
@@ -24,7 +24,7 @@ Having specified views, the client can invoke at least two **query operations** 
 
 The complex query engines access knowledge published by one or more mondixers (potentially at different locations in a distributed system) through the mondix interface, and process it to compute query results. It is the responsibility of such mondix clients to allow the **formulation and interpretation and execution of complex queries** that refer to knowledge provided by the mondixers, where the query execution phase may consult the mondixers through the mondix API. It is the responsibility of the query engine to plan, distribute and schedule computation steps and intermediate results; complex query processing is not expected of mondixers. 
 
-##Modularity
+## Modularity
 
 The mondix API is envisioned as modular: not all mondixers are required to provide every capability, as not all clients would need them all. The following feature packs are foreseen at the moment:
 
@@ -39,7 +39,7 @@ The mondix API is envisioned as modular: not all mondixers are required to provi
 
 Currently, the draft API is available for the core functionality and the change-aware extensions. The rest of the extensions are to be designed in the future.
 
-##Change-aware extensions 
+## Change-aware extensions 
 
 The core functionality assumes that the knowledge indexed by the mondixer does not change during the time frame of the activities of the client (more precisely, during the lifespan of a view). There are cases when this assumption cannot be made. The indexed model, or at least some base relations provided by the mondixers, may experience change. In this case, it can often be useful to notify clients of this change, so that the complex query results computed from the output of the mondixer can be kept up to date.
 
@@ -48,7 +48,7 @@ If a mondix base relation is change-aware, its views are **live views**. A live 
 A meaningful modification of the indexed model may involve more than one row-level change in the relational representation. Thus the client may have an **inconsistent picture** of the published knowledge when it has only partially received change notifications from the various live queries of the various change-aware base relations. Therefore change-aware relations must be published by **change-aware mondix instance**s that provide a **consistency listener** facility. When the indexed model reaches a consistent state after a sequence of changes (of which clients have been notified via the change listeners registered at live queries), the change aware mondix instance notifies the consistency listeners of this fact. The exact guarantees of the consistency notification (described in detail in the Javadoc) take into account the case of multiple consistency listeners that may change the model.
 
 
-##Contents 
+## Contents 
 
 * `eu.mondo.mondix.interfaces`: the mondix interfaces themselves
   - still a draft version 
